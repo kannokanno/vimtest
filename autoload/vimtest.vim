@@ -137,7 +137,7 @@ function! s:format(message, expected, actual)
   return printf('%sexpected:<%s> but was:<%s>', message, a:expected, a:actual)
 endfunction
 
-function! s:.insert(list, testcase, message)
+function! s:insert(list, testcase, message)
   call insert(a:list, {
         \ 'testcase': a:testcase,
         \ 'message': a:message,
