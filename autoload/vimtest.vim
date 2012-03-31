@@ -85,6 +85,7 @@ function! vimtest#new(name)
       endfor
     catch
       call self._insertFailed(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call add(self._progress, 'E')
     finally
     endtry
     call self.shutdown()
@@ -104,7 +105,6 @@ function! vimtest#new(name)
     let passed_count = len(self._passed)
     let failed_count = len(self._failed)
 
-    echo self._progress
     for p in self._progress
       echon p
     endfor
