@@ -14,12 +14,22 @@ function! vimtest#reset()
   let s:vimtest.runners = []
 endfunction
 
+function! vimtest#run()
+  for r in s:vimtest.runners
+    let r._summary_on = 0
+    call r.run()
+  endfor
+  call s:vimtest.result()
+  call vimtest#reset()
+endfunction
+
 function! vimtest#new(name)
   let runner = {
         \ '_name': a:name,
         \ '_passed': [],
         \ '_failed': [],
         \ '_current_testcase': '',
+        \ '_progress': [],
         \ '_summary_on': 1,
         \ 'custom': {},
         \ }
@@ -44,9 +54,11 @@ function! vimtest#new(name)
     if (empty(expected) && empty(actual))
           \ || expected ==# actual
       call insert(self._passed, {})
+      call add(self._progress, '.')
       return 1
     else
       call self._insertFailed(printf('%s%s', message, s:format('Failed asserting', expected, actual)))
+      call add(self._progress, 'F')
       return 0
     endif
   endfunction
@@ -84,12 +96,19 @@ function! vimtest#new(name)
           \ 'testcase': self._current_testcase,
           \ 'message': a:message,
           \ })
+    call add(self._progress, 'F')
   endfunction
 
   function! runner._result()
     let failures = []
     let passed_count = len(self._passed)
     let failed_count = len(self._failed)
+
+    echo self._progress
+    for p in self._progress
+      echon p
+    endfor
+
     if !empty(self._failed)
       echo printf("\n# %s", self._name)
       for i in range(failed_count)
@@ -105,14 +124,6 @@ function! vimtest#new(name)
 
   call add(s:vimtest.runners, runner)
   return runner
-endfunction
-
-function! vimtest#run()
-  for r in s:vimtest.runners
-    let r._summary_on = 0
-    call r.run()
-  endfor
-  call s:vimtest.result()
 endfunction
 
 function! s:vimtest.result()
