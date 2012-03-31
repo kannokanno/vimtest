@@ -94,10 +94,10 @@ function! vimtest#new(name)
 
   function! runner._result()
     let failed_messages = []
-    if !empty(self._failed)
+    if !empty(self.assert._failed)
       call add(failed_messages, printf("\n# %s", self._name))
-      for i in range(len(self._failed))
-        let f = self._failed[i]
+      for i in range(len(self.assert._failed))
+        let f = self.assert._failed[i]
         call add(failed_messages, printf("  %d) %s", i+1, f.testcase))
         call add(failed_messages, printf("      %s\n", f.message))
       endfor
