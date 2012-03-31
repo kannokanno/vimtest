@@ -25,12 +25,7 @@ endfunction
 function! vimtest#new(name)
   let runner = {
         \ '_name': a:name,
-        \ 'assert': {
-        \   '_progress': [],
-        \   '_passed': [],
-        \   '_failed': [],
-        \   '_current_testcase': '',
-        \ },
+        \ 'assert': vimtest#assert#new(),
         \ 'custom': {},
         \ }
   function! runner.startup()
@@ -40,20 +35,6 @@ function! vimtest#new(name)
   function! runner.teardown()
   endfunction
   function! runner.shutdown()
-  endfunction
-
-  function! runner.assert.equals(...)
-    let expected = a:1
-    let actual = a:2
-    if vimtest#assert#equals(expected, actual)
-      call insert(self._passed, {})
-      call add(self._progress, '.')
-      return 1
-    else
-      call s:insert(self._failed, self._current_testcase, printf('%s', s:format('Failed asserting', expected, actual)))
-      call add(self._progress, 'F')
-      return 0
-    endif
   endfunction
 
   function! runner.run(...)
@@ -77,8 +58,7 @@ function! vimtest#new(name)
         call self.teardown()
       endfor
     catch
-      call s:insert(self.assert._failed, self.assert._current_testcase, printf('Excpetion:%s in %s', v:exception, v:throwpoint))
-      call add(self.assert._progress, 'E')
+      call self.assert.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
     finally
     endtry
     call self.shutdown()
@@ -127,21 +107,6 @@ function! s:summary_message(passed_count, failed_count)
         \ a:passed_count,
         \ a:failed_count,
         \ )
-endfunction
-
-function! s:format(message, expected, actual)
-  let message = a:message
-  if !empty(message)
-    let message = message . ' '
-  endif
-  return printf('%sexpected:<%s> but was:<%s>', message, a:expected, a:actual)
-endfunction
-
-function! s:insert(list, testcase, message)
-  call insert(a:list, {
-        \ 'testcase': a:testcase,
-        \ 'message': a:message,
-        \ })
 endfunction
 
 let &cpo = s:save_cpo
