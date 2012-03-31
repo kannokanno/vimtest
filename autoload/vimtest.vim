@@ -29,6 +29,7 @@ function! vimtest#new(name)
         \ '_failed': [],
         \ '_current_testcase': '',
         \ '_progress': [],
+        \ 'assert': {},
         \ 'custom': {},
         \ }
   function! runner.startup()
@@ -40,22 +41,13 @@ function! vimtest#new(name)
   function! runner.shutdown()
   endfunction
 
-  function! runner.assert(...)
-    let argc = len(a:000)
-    if argc < 2
-      throw 'assertに渡す引数が少ないです'
-    endif
-    let expected = a:1
-    let actual = a:2
-    let message = argc == 3 ? a:3 . ':' : ''
-
-    if (empty(expected) && empty(actual))
-          \ || expected ==# actual
+  function! runner.assert.equals(...)
+    if vimtest#assert#equals(a:1, a:2)
       call insert(self._passed, {})
       call add(self._progress, '.')
       return 1
     else
-      call self._insertFailed(printf('%s%s', message, s:format('Failed asserting', expected, actual)))
+      call self._insertFailed(printf('%s', s:format('Failed asserting', expected, actual)))
       call add(self._progress, 'F')
       return 0
     endif
