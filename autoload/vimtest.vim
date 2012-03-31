@@ -45,7 +45,7 @@ function! vimtest#new(name)
   function! runner.assert.equals(...)
     let expected = a:1
     let actual = a:2
-    if vimtest#assert#equals(expected, acutal)
+    if vimtest#assert#equals(expected, actual)
       call insert(self._passed, {})
       call add(self._progress, '.')
       return 1
