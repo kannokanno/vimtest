@@ -108,17 +108,17 @@ function! vimtest#new(name)
 endfunction
 
 function! vimtest#run()
-  for r in self.runners
+  for r in s:vimtest.runners
     let r._summary_on = 0
     call r.run()
   endfor
-  call self.result()
+  call s:vimtest.result()
 endfunction
 
 function! s:vimtest.result()
   let total_passed_count = 0
   let total_failed_count = 0
-  for r in self.runners
+  for r in s:vimtest.runners
     let total_passed_count += len(r._passed)
     let total_failed_count += len(r._failed)
   endfor
