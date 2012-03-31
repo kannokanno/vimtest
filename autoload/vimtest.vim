@@ -85,7 +85,7 @@ function! vimtest#new(name)
       endfor
     catch
       call self.assert._insertFailed(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
-      call add(self._progress, 'E')
+      call add(self.assert._progress, 'E')
     finally
     endtry
     call self.shutdown()
