@@ -50,17 +50,10 @@ function! vimtest#new(name)
       call add(self._progress, '.')
       return 1
     else
-      call self._insertFailed(printf('%s', s:format('Failed asserting', expected, actual)))
+      call s:insert(self.failed, self._current_testcase, printf('%s', s:format('Failed asserting', expected, actual)))
       call add(self._progress, 'F')
       return 0
     endif
-  endfunction
-
-  function! runner.assert._insertFailed(message)
-    call insert(self._failed, {
-          \ 'testcase': self._current_testcase,
-          \ 'message': a:message,
-          \ })
   endfunction
 
   function! runner.run(...)
@@ -84,7 +77,7 @@ function! vimtest#new(name)
         call self.teardown()
       endfor
     catch
-      call self.assert._insertFailed(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call s:insert(self.failed, self._current_testcase, printf('Excpetion:%s in %s', v:exception, v:throwpoint))
       call add(self.assert._progress, 'E')
     finally
     endtry
@@ -142,6 +135,13 @@ function! s:format(message, expected, actual)
     let message = message . ' '
   endif
   return printf('%sexpected:<%s> but was:<%s>', message, a:expected, a:actual)
+endfunction
+
+function! s:.insert(list, testcase, message)
+  call insert(a:list, {
+        \ 'testcase': a:testcase,
+        \ 'message': a:message,
+        \ })
 endfunction
 
 let &cpo = s:save_cpo

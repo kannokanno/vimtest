@@ -3,7 +3,7 @@ function! s:_assert(expected, actual, bool)
     let expected = a:expected
     let actual = a:actual
     if (expected == actual) == a:bool
-      echon '.'
+      echon '+'
     else
       echo printf('NG:expected %s but was %s', expected, actual)
       echo ''
@@ -39,45 +39,45 @@ unlet s:_test
 call vimtest#reset()
 let s:_test = vimtest#new('new test')
 function! s:_test.sum()  
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(2, 1 + 1) " passed
-  call self.assert(1, 1 + 2) " failed
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(2, 1 + 1) " passed
+  call self.assert.equals(1, 1 + 2) " failed
 endfunction 
 call s:_test.run() " show failed message
-call s:assert(3, len(s:_test._passed) + len(s:_test._failed))
-call s:assert(2, len(s:_test._passed))
-call s:assert(1, len(s:_test._failed))
+call s:assert(3, len(s:_test.assert._passed) + len(s:_test.assert._failed))
+call s:assert(2, len(s:_test.assert._passed))
+call s:assert(1, len(s:_test.assert._failed))
 unlet s:_test
 
 " ---------
 call vimtest#reset()
 let s:_test = vimtest#new('ex catch test')
 function! s:_test.sum()  
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(1, a) " inner exception
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(1, a) " inner exception
 endfunction 
 call s:_test.run() " show failed message
-call s:assert(2, len(s:_test._passed) + len(s:_test._failed))
-call s:assert(1, len(s:_test._passed))
-call s:assert(1, len(s:_test._failed))
+call s:assert(2, len(s:_test.assert._passed) + len(s:_test.assert._failed))
+call s:assert(1, len(s:_test.assert._passed))
+call s:assert(1, len(s:_test.assert._failed))
 unlet s:_test
 
 " ---------
 call vimtest#reset()
 let s:_test = vimtest#new('multiple test')
 function! s:_test.something_one()  
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(1, 1 + 2) " failed
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(1, 1 + 2) " failed
 endfunction 
 function! s:_test.something_two()  
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(1, 1 + 2) " failed
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(1, 1 + 2) " failed
 endfunction 
 call s:_test.run() " show failed message
-call s:assert(5, len(s:_test._passed) + len(s:_test._failed))
-call s:assert(3, len(s:_test._passed))
-call s:assert(2, len(s:_test._failed))
+call s:assert(5, len(s:_test.assert._passed) + len(s:_test.assert._failed))
+call s:assert(3, len(s:_test.assert._passed))
+call s:assert(2, len(s:_test.assert._failed))
 unlet s:_test
 
 " ---------
@@ -87,35 +87,35 @@ function! s:_test_a.setup()
   let self.custom = {'expected': 1}
 endfunction
 function! s:_test_a.one()  
-  call self.assert(self.custom.expected, 1 + 0) " passed
-  call self.assert(self.custom.expected, 1 + 2) " failed
+  call self.assert.equals(self.custom.expected, 1 + 0) " passed
+  call self.assert.equals(self.custom.expected, 1 + 2) " failed
 endfunction 
 function! s:_test_a.two()  
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(1, 1 + 2) " failed
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(1, 1 + 2) " failed
 endfunction 
 
 let s:_test_b = vimtest#new('multiple conetxt b')
 function! s:_test_b.one()  
-  call self.assert(1, 1 + 0) " passed
+  call self.assert.equals(1, 1 + 0) " passed
 endfunction 
 function! s:_test_b.two()  
-  call self.assert(1, 1 + 0) " passed
-  call self.assert(1, 1 + 1) " failed
+  call self.assert.equals(1, 1 + 0) " passed
+  call self.assert.equals(1, 1 + 1) " failed
 endfunction 
 call vimtest#run() " show failed message
 
 call s:assert(8, 
-      \ len(s:_test_a._passed) +
-      \ len(s:_test_a._failed) +
-      \ len(s:_test_b._passed) +
-      \ len(s:_test_b._failed)
+      \ len(s:_test_a.assert._passed) +
+      \ len(s:_test_a.assert._failed) +
+      \ len(s:_test_b.assert._passed) +
+      \ len(s:_test_b.assert._failed)
       \ )
-call s:assert(3, len(s:_test_a._passed))
-call s:assert(2, len(s:_test_a._failed))
-call s:assert(2, len(s:_test_b._passed))
-call s:assert(1, len(s:_test_b._failed))
+call s:assert(3, len(s:_test_a.assert._passed))
+call s:assert(2, len(s:_test_a.assert._failed))
+call s:assert(2, len(s:_test_b.assert._passed))
+call s:assert(1, len(s:_test_b.assert._failed))
 unlet s:_test_a
 unlet s:_test_b
 
