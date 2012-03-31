@@ -10,7 +10,7 @@ if exists('s:vimtest')
 endif
 let s:vimtest = {'runners': []}
 
-function! s:vimtest#reset()
+function! vimtest#reset()
   let s:vimtest.runners = []
 endfunction
 
