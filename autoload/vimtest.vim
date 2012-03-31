@@ -77,7 +77,7 @@ function! vimtest#new(name)
         call self.teardown()
       endfor
     catch
-      call s:insert(self._failed, self._current_testcase, printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call s:insert(self.assert._failed, self.assert._current_testcase, printf('Excpetion:%s in %s', v:exception, v:throwpoint))
       call add(self.assert._progress, 'E')
     finally
     endtry
