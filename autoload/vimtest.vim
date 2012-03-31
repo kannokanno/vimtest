@@ -50,7 +50,7 @@ function! vimtest#new(name)
       call add(self._progress, '.')
       return 1
     else
-      call s:insert(self.failed, self._current_testcase, printf('%s', s:format('Failed asserting', expected, actual)))
+      call s:insert(self._failed, self._current_testcase, printf('%s', s:format('Failed asserting', expected, actual)))
       call add(self._progress, 'F')
       return 0
     endif
@@ -77,7 +77,7 @@ function! vimtest#new(name)
         call self.teardown()
       endfor
     catch
-      call s:insert(self.failed, self._current_testcase, printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call s:insert(self._failed, self._current_testcase, printf('Excpetion:%s in %s', v:exception, v:throwpoint))
       call add(self.assert._progress, 'E')
     finally
     endtry
