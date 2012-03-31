@@ -16,7 +16,6 @@ endfunction
 
 function! vimtest#run()
   for r in s:vimtest.runners
-    let r._summary_on = 0
     call r.run()
   endfor
   call s:vimtest.result()
@@ -30,7 +29,6 @@ function! vimtest#new(name)
         \ '_failed': [],
         \ '_current_testcase': '',
         \ '_progress': [],
-        \ '_summary_on': 1,
         \ 'custom': {},
         \ }
   function! runner.startup()
@@ -100,25 +98,16 @@ function! vimtest#new(name)
   endfunction
 
   function! runner._result()
-    let failures = []
-    let passed_count = len(self._passed)
-    let failed_count = len(self._failed)
-
-    for p in self._progress
-      echon p
-    endfor
-
+    let failed_messages = []
     if !empty(self._failed)
-      echo printf("\n# %s", self._name)
-      for i in range(failed_count)
+      call add(failed_messages, printf("\n# %s", self._name))
+      for i in range(len(self._failed))
         let f = self._failed[i]
-        echo printf('  %d) %s', i+1, f.testcase)
-        echo printf("      %s\n", f.message)
+        call add(failed_messages, printf("  %d) %s", i+1, f.testcase))
+        call add(failed_messages, printf("      %s\n", f.message))
       endfor
     endif
-    if self._summary_on
-      call s:summary_message(passed_count, failed_count)
-    endif
+    return join(failed_messages, "\n")
   endfunction
 
   call add(s:vimtest.runners, runner)
@@ -128,10 +117,16 @@ endfunction
 function! s:vimtest.result()
   let total_passed_count = 0
   let total_failed_count = 0
+  let failed_messages = []
   for r in s:vimtest.runners
     let total_passed_count += len(r._passed)
     let total_failed_count += len(r._failed)
+    call add(failed_messages, r._result())
+    for p in r._progress
+      echon p
+    endfor
   endfor
+  echo join(failed_messages, "\n")
   call s:summary_message(total_passed_count, total_failed_count)
 endfunction
 
