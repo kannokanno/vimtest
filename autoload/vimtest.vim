@@ -25,11 +25,11 @@ endfunction
 function! vimtest#new(name)
   let runner = {
         \ '_name': a:name,
-        \ '_current_testcase': '',
         \ 'assert': {
         \   '_progress': [],
         \   '_passed': [],
         \   '_failed': [],
+        \   '_current_testcase': '',
         \ },
         \ 'custom': {},
         \ }
@@ -54,6 +54,13 @@ function! vimtest#new(name)
     endif
   endfunction
 
+  function! runner.assert._insertFailed(message)
+    call insert(self._failed, {
+          \ 'testcase': self._current_testcase,
+          \ 'message': a:message,
+          \ })
+  endfunction
+
   function! runner.run(...)
     try
       " TODO dirty
@@ -69,25 +76,18 @@ function! vimtest#new(name)
             \ ], '&&')
       call self.startup()
       for func in filter(keys(self), pattern)
-        let self._current_testcase = func
+        let self.assert._current_testcase = func
         call self.setup()
         call call(self[func], [], self)
         call self.teardown()
       endfor
     catch
-      call self._insertFailed(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call self.assert._insertFailed(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
       call add(self._progress, 'E')
     finally
     endtry
     call self.shutdown()
     call self._result()
-  endfunction
-
-  function! runner._insertFailed(message)
-    call insert(self._failed, {
-          \ 'testcase': self._current_testcase,
-          \ 'message': a:message,
-          \ })
   endfunction
 
   function! runner._result()
