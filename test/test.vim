@@ -21,12 +21,12 @@ endfunction
 
 " ---------
 let s:_test = vimtest#new('new test')
-call s:assert(1, s:_test.assert(2, 1 + 1))
-call s:assert(1, s:_test.assert("a", "a"))
-call s:assert(1, s:_test.assert("あ", "あ"))
-call s:assert(0, s:_test.assert(1, 1 + 1))
-call s:assert(0, s:_test.assert("", 1))
-call s:assert(0, s:_test.assert(1, ""))
+call s:assert(1, s:_test.assert.equals(2, 1 + 1))
+call s:assert(1, s:_test.assert.equals("a", "a"))
+call s:assert(1, s:_test.assert.equals("あ", "あ"))
+call s:assert(0, s:_test.assert.equals(1, 1 + 1))
+call s:assert(0, s:_test.assert.equals("", 1))
+call s:assert(0, s:_test.assert.equals(1, ""))
 unlet s:_test
 
 " ---------
@@ -102,7 +102,7 @@ function! s:_test_b.one()
 endfunction 
 function! s:_test_b.two()  
   call self.assert(1, 1 + 0) " passed
-  call self.assert(1, 1 + 1, 'メッセージ確認') " failed
+  call self.assert(1, 1 + 1) " failed
 endfunction 
 call vimtest#run() " show failed message
 

@@ -25,11 +25,12 @@ endfunction
 function! vimtest#new(name)
   let runner = {
         \ '_name': a:name,
-        \ '_passed': [],
-        \ '_failed': [],
         \ '_current_testcase': '',
-        \ '_progress': [],
-        \ 'assert': {},
+        \ 'assert': {
+        \   '_progress': [],
+        \   '_passed': [],
+        \   '_failed': [],
+        \ },
         \ 'custom': {},
         \ }
   function! runner.startup()
@@ -111,10 +112,10 @@ function! s:vimtest.result()
   let total_failed_count = 0
   let failed_messages = []
   for r in s:vimtest.runners
-    let total_passed_count += len(r._passed)
-    let total_failed_count += len(r._failed)
+    let total_passed_count += len(r.assert._passed)
+    let total_failed_count += len(r.assert._failed)
     call add(failed_messages, r._result())
-    for p in r._progress
+    for p in r.assert._progress
       echon p
     endfor
   endfor
