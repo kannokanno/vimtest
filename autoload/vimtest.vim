@@ -97,7 +97,6 @@ function! vimtest#new(name)
           \ 'testcase': self._current_testcase,
           \ 'message': a:message,
           \ })
-    call add(self._progress, 'F')
   endfunction
 
   function! runner._result()
