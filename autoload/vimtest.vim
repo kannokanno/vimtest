@@ -10,6 +10,10 @@ if exists('s:vimtest')
 endif
 let s:vimtest = {'runners': []}
 
+function! s:vimtest#reset()
+  let s:vimtest.runners = []
+endfunction
+
 function! vimtest#new(name)
   let runner = {
         \ '_name': a:name,
@@ -130,10 +134,6 @@ function! s:summary_message(passed_count, failed_count)
         \ a:passed_count,
         \ a:failed_count,
         \ )
-endfunction
-
-function! s:vimtest.reset()
-  let s:vimtest.runners = []
 endfunction
 
 function! s:format(message, expected, actual)
