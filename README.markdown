@@ -4,13 +4,11 @@ Testing plugin for Vim script
 
 ## Usage
 
-* initialize testcase instance.
-
+initialize testcase instance.
 
     let testcase = vimtest#new('sample test')
 
-* add test method
-
+add test method
 
     function! testcase.sum()
       let x = 1
@@ -18,18 +16,16 @@ Testing plugin for Vim script
       call self.assert.equals(3, x + y)
     endfunction
 
-* run
-
+run
 
     :source %
 
-* result
-
+result
 
     .
     Test cases run: 1, Passes: 1, Failures: 0
 
-* failed message
+failed message
 
 
     let testcase = vimtest#new('failed test')
@@ -41,6 +37,7 @@ Testing plugin for Vim script
     call vimtest#run()
 
 
+result
 
     F
 
@@ -52,6 +49,6 @@ Testing plugin for Vim script
     Test cases run: 1, Passes: 0, Failures: 1
 
 
-* more
+## more
 
 @see sample/sample.vim
