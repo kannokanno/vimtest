@@ -22,9 +22,10 @@ function! vimtest#run()
   call vimtest#reset()
 endfunction
 
-function! vimtest#new(name)
+function! vimtest#new(...)
+  let name = len(a:000) > 0 ? a:1 : 'Test'
   let runner = {
-        \ '_name': a:name,
+        \ '_name': name,
         \ 'assert': vimtest#assert#new(),
         \ 'custom': {},
         \ }
@@ -54,12 +55,15 @@ function! vimtest#new(name)
       for func in filter(keys(self), pattern)
         let self.assert._current_testcase = func
         call self.setup()
-        call call(self[func], [], self)
+        try
+          call call(self[func], [], self)
+        catch
+          call self.assert.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+        endtry
         call self.teardown()
       endfor
     catch
       call self.assert.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
-    finally
     endtry
     call self.shutdown()
     call self._result()
@@ -94,7 +98,11 @@ function! s:vimtest.result()
       echon p
     endfor
   endfor
-  echo join(failed_messages, "\n")
+  for m in failed_messages
+    if !empty(m)
+      echo m
+    endif
+  endfor
   call s:summary_message(total_passed_count, total_failed_count)
 endfunction
 

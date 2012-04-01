@@ -21,12 +21,16 @@ function! vimtest#assert#new()
     let expected = a:1
     let actual = a:2
 
-    if (empty(expected) && empty(actual))
-          \ || expected ==# actual
-      return self.success()
-    else
-      return self.failed(printf('%s', s:format('Failed asserting', string(expected), string(actual))))
-    endif
+    try
+      if (empty(expected) && empty(actual))
+            \ || expected ==# actual
+        return self.success()
+      else
+        return self.failed(printf('%s', s:format('Failed asserting', string(expected), string(actual))))
+      endif
+    catch
+      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+    endtry
   endfunction
 
   function! assert.notEquals(...)
@@ -37,26 +41,38 @@ function! vimtest#assert#new()
     let expected = a:1
     let actual = a:2
 
-    if (empty(expected) && empty(actual))
-          \ || expected ==# actual
-      return self.failed(s:format('Failed asserting not', string(expected), string(actual)))
-    else
-      return self.success()
-    endif
+    try
+      if (empty(expected) && empty(actual))
+            \ || expected ==# actual
+        return self.failed(s:format('Failed asserting not', string(expected), string(actual)))
+      else
+        return self.success()
+      endif
+    catch
+      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+    endtry
   endfunction
 
   function! assert.true(...)
-    if 1 == a:1
-      return self.success()
-    endif
-    return self.failed(printf('Failed asserting expected 1 but was:%s', string(a:1)))
+    try
+      if 1 == a:1
+        return self.success()
+      endif
+      return self.failed(printf('Failed asserting expected 1 but was:%s', string(a:1)))
+    catch
+      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+    endtry
   endfunction
 
   function! assert.false(...)
-    if 0 == a:1
-      return self.success()
-    endif
-    return self.failed(printf('Failed asserting expected 0 but was:%s', string(a:1)))
+    try
+      if 0 == a:1
+        return self.success()
+      endif
+      return self.failed(printf('Failed asserting expected 0 but was:%s', string(a:1)))
+    catch
+      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+    endtry
   endfunction
 
   function! assert.success()
