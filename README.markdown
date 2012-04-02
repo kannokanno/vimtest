@@ -16,6 +16,11 @@ add test method
       call self.assert.equals(3, x + y)
     endfunction
 
+finally write 'call vimtest#run()' for run testcase
+
+    call vimtest#run()
+
+
 run
 
     :source %
