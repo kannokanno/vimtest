@@ -1,4 +1,6 @@
-# vimtest(v0.0.1)
+# vimtest(v0.0.2)
+
+## What this script
 
 Testing plugin for Vim script
 
