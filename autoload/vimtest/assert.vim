@@ -33,6 +33,7 @@ function! vimtest#assert#new()
     endtry
   endfunction
 
+  " TODO キャメルケースに違和感
   function! assert.notEquals(...)
     let argc = len(a:000)
     if argc < 2
@@ -54,25 +55,11 @@ function! vimtest#assert#new()
   endfunction
 
   function! assert.true(...)
-    try
-      if 1 == a:1
-        return self.success()
-      endif
-      return self.failed(printf('Failed asserting expected 1 but was:%s', string(a:1)))
-    catch
-      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
-    endtry
+    return self.match(1, string(a:1))
   endfunction
 
   function! assert.false(...)
-    try
-      if 0 == a:1
-        return self.success()
-      endif
-      return self.failed(printf('Failed asserting expected 0 but was:%s', string(a:1)))
-    catch
-      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
-    endtry
+    return self.match(0, string(a:1))
   endfunction
 
   function! assert.success()
@@ -93,14 +80,23 @@ function! vimtest#assert#new()
     return 0
   endfunction
 
+  " TODO assert.equalsで置き換える
+  function! assert.match(expected, arg)
+    try
+      if a:expected == a:arg
+        return self.success()
+      endif
+      return self.failed(printf('Failed asserting expected %s but was:%s', a:expected, a:arg))
+    catch
+      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+    endtry
+  endfunction
+
   return assert
 endfunction
 
 function! s:format(message, expected, actual)
-  let message = a:message
-  if !empty(message)
-    let message = message . ' '
-  endif
+  let message = empty(a:message) ? '' : a:message . ' '
   return printf('%sexpected:<%s> but was:<%s>', message, a:expected, a:actual)
 endfunction
 
