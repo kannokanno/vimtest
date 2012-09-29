@@ -61,7 +61,7 @@ function! vimtest#run(path, type)
 endfunction
 
 function! vimtest#new(...)
-  let name = len(a:000) > 0 ? a:1 : 'Test'
+  let name = len(a:000) > 0 ? a:1 : expand('%:t')
   let runner = {
         \ '_name'  : name,
         \ 'assert' : vimtest#assert#new(),
