@@ -110,5 +110,3 @@ function! testcase.shutdown()
   echo 'shutdown'
   echo ''
 endfunction
-
-call vimtest#run()

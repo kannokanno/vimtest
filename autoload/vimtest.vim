@@ -8,26 +8,62 @@ set cpo&vim
 if exists('s:vimtest')
   unlet s:vimtest
 endif
-let s:vimtest = {'runners': []}
 
-function! vimtest#reset()
-  let s:vimtest.runners = []
+function! s:initialize_instance()
+  return {
+        \ 'runners'   : [],
+        \ 'outputter' : '',
+        \ 'testfile'  : '',
+        \ }
+endfunction
+let s:vimtest = s:initialize_instance()
+
+function! s:parse_args(path, type)
+  let info = {}
+  let info.testfile = empty(a:path) ? expand('%') : a:path
+  let info.outputter = s:get_outputter(a:type)
+  return info
 endfunction
 
-function! vimtest#run()
-  for r in s:vimtest.runners
-    call r.run()
-  endfor
-  call s:vimtest.result()
-  call vimtest#reset()
+function! s:get_outputter(type)
+  if a:type ==? 'buffer'
+    return vimtest#outputter#buffer#new()
+  elseif a:type ==? 'string'
+    return vimtest#outputter#string#new()
+  else
+    return vimtest#outputter#buffer#new()
+  endif
+endfunction
+
+function! vimtest#reset()
+  let s:vimtest = s:initialize_instance()
+endfunction
+
+function! vimtest#run(path, type)
+  try
+    call extend(s:vimtest, s:parse_args(a:path, a:type))
+    " TODO どんなソースもsourceしちゃう
+    silent! execute ':source ' . s:vimtest.testfile
+    if !empty(s:vimtest.runners)
+      call s:vimtest.outputter.init()
+      for r in s:vimtest.runners
+        call r.run()
+      endfor
+      call s:vimtest.outputter.out(s:vimtest.runners)
+    endif
+  catch
+    echoerr v:errmsg
+  finally
+    call vimtest#reset()
+  endtry
 endfunction
 
 function! vimtest#new(...)
   let name = len(a:000) > 0 ? a:1 : 'Test'
   let runner = {
-        \ '_name': name,
-        \ 'assert': vimtest#assert#new(),
-        \ 'custom': {},
+        \ '_name'  : name,
+        \ 'assert' : vimtest#assert#new(),
+        \ 'custom' : {},
         \ }
   function! runner.startup()
   endfunction
@@ -84,37 +120,6 @@ function! vimtest#new(...)
 
   call add(s:vimtest.runners, runner)
   return runner
-endfunction
-
-function! s:vimtest.result()
-  let total_passed_count = 0
-  let total_failed_count = 0
-  let failed_messages = []
-  for r in s:vimtest.runners
-    let total_passed_count += len(r.assert._passed)
-    let total_failed_count += len(r.assert._failed)
-    call add(failed_messages, r._result())
-    for p in r.assert._progress
-      echon p
-    endfor
-  endfor
-  for m in failed_messages
-    if !empty(m)
-      echo m
-    endif
-  endfor
-  call s:summary_message(total_passed_count, total_failed_count)
-endfunction
-
-function! s:summary_message(passed_count, failed_count)
-  if a:failed_count != 0
-    echohl FailMsg | echo 'FAILURES!' | echohl FailMsg
-  endif
-  echo printf("Test cases run: %d, Passes: %d, Failures: %d\n",
-        \ a:passed_count + a:failed_count,
-        \ a:passed_count,
-        \ a:failed_count,
-        \ )
 endfunction
 
 let &cpo = s:save_cpo
