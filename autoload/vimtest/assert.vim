@@ -16,7 +16,7 @@ function! vimtest#assert#new()
   function! assert.equals(...)
     let argc = len(a:000)
     if argc < 2
-      throw printf('assertに渡す引数が少ないです:%s', string(a:000))
+      throw vimtest#message#not_enough_args('assert', 2, len(a:000))
     endif
     let expected = a:1
     let actual = a:2
@@ -26,10 +26,10 @@ function! vimtest#assert#new()
             \ || ((type(expected) ==# type(actual)) && (expected ==# actual))
         return self.success()
       else
-        return self.failed(printf('%s', s:format('Failed asserting', string(expected), string(actual))))
+        return self.failed(vimtest#message#failure_assert(expected, actual))
       endif
     catch
-      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call self.error(v:exception, v:throwpoint)
     endtry
   endfunction
 
@@ -37,7 +37,7 @@ function! vimtest#assert#new()
   function! assert.notEquals(...)
     let argc = len(a:000)
     if argc < 2
-      throw printf('assertに渡す引数が少ないです:%s', string(a:000))
+      throw vimtest#message#not_enough_args('assert', 2, len(a:000))
     endif
     let expected = a:1
     let actual = a:2
@@ -45,12 +45,12 @@ function! vimtest#assert#new()
     try
       if (empty(expected) && empty(actual))
             \ || expected ==# actual
-        return self.failed(s:format('Failed asserting not', string(expected), string(actual)))
+        return self.failed(vimtest#message#failure_assert_not(expected, actual))
       else
         return self.success()
       endif
     catch
-      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call self.error(v:exception, v:throwpoint)
     endtry
   endfunction
 
@@ -74,8 +74,9 @@ function! vimtest#assert#new()
     return 0
   endfunction
 
-  function! assert.error(message)
-    call s:insert(self._failed, self._current_testcase, a:message)
+  function! assert.error(exception, throwpoint)
+    let message = vimtest#message#exception(a:exception, a:throwpoint)
+    call s:insert(self._failed, self._current_testcase, message)
     call add(self._progress, 'E')
     return 0
   endfunction
@@ -86,18 +87,13 @@ function! vimtest#assert#new()
       if a:expected == a:arg
         return self.success()
       endif
-      return self.failed(printf('Failed asserting expected %s but was:%s', a:expected, a:arg))
+      return self.failed(vimtest#message#failure_assert(expected, actual))
     catch
-      call self.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call self.error(v:exception, v:throwpoint)
     endtry
   endfunction
 
   return assert
-endfunction
-
-function! s:format(message, expected, actual)
-  let message = empty(a:message) ? '' : a:message . ' '
-  return printf('%sexpected:<%s> but was:<%s>', message, a:expected, a:actual)
 endfunction
 
 function! s:insert(list, testcase, message)

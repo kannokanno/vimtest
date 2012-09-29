@@ -96,12 +96,12 @@ function! vimtest#new(...)
         try
           call call(self[func], [], self)
         catch
-          call self.assert.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+          call self.assert.error(v:exception, v:throwpoint)
         endtry
         call self.teardown()
       endfor
     catch
-      call self.assert.error(printf('Excpetion:%s in %s', v:exception, v:throwpoint))
+      call self.assert.error(v:exception, v:throwpoint)
     endtry
     call self.shutdown()
     call self._result()
