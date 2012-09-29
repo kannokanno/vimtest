@@ -30,6 +30,8 @@ function! s:get_outputter(type)
     return vimtest#outputter#buffer#new()
   elseif a:type ==? 'string'
     return vimtest#outputter#string#new()
+  elseif a:type ==? 'stdout'
+    return vimtest#outputter#stdout#new()
   else
     return vimtest#outputter#buffer#new()
   endif
