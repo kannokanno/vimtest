@@ -6,25 +6,44 @@ set cpo&vim
 let s:outputter = vimtest#outputter#instance()
 
 function! s:outputter.out(runners)
-  let total_passed_count = 0
-  let total_failed_count = 0
-  let failed_messages = []
   let message = ''
-  for r in a:runners
-    let total_passed_count += len(r.assert._passed)
-    let total_failed_count += len(r.assert._failed)
-    call add(failed_messages, r._result())
+  let message .= self.create_progress_message(a:runners)
+  let message .= self.create_failed_message(a:runners)
+  let message .= self.create_summary_message(a:runners)
+  return message
+endfunction
+
+" TODO messageの組み立てはこのファイルの責務じゃない
+function! s:outputter.create_progress_message(results)
+  let message = ''
+  for r in a:results
     for p in r.assert._progress
       let message .= p
     endfor
   endfor
-  for m in failed_messages
-    if !empty(m)
-      let message .= m
+  return message
+endfunction
+
+" TODO messageの組み立てはこのファイルの責務じゃない
+function! s:outputter.create_failed_message(results)
+  let message = ''
+  for r in a:results
+    if !empty(r._result())
+      let message .= r._result()
     endif
   endfor
-  let message .= vimtest#message#summary(total_passed_count, total_failed_count)
   return message
+endfunction
+
+" TODO messageの組み立てはこのファイルの責務じゃない
+function! s:outputter.create_summary_message(results)
+  let total_passed_count = 0
+  let total_failed_count = 0
+  for r in a:results
+    let total_passed_count += len(r.assert._passed)
+    let total_failed_count += len(r.assert._failed)
+  endfor
+  return vimtest#message#summary(total_passed_count, total_failed_count)
 endfunction
 
 function! vimtest#outputter#string#new()
