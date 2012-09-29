@@ -3,9 +3,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:outputter = {}
-function! s:outputter.init()
-endfunction
+let s:outputter = vimtest#outputter#instance()
+
 function! s:outputter.out(runners)
   let str = vimtest#outputter#string#new()
   echo str.out(a:runners)

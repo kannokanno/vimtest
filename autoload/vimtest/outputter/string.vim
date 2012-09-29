@@ -3,9 +3,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:outputter = {}
-function! s:outputter.init()
-endfunction
+let s:outputter = vimtest#outputter#instance()
 
 function! s:outputter.out(runners)
   let total_passed_count = 0
