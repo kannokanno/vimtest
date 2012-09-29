@@ -23,7 +23,7 @@ function! vimtest#assert#new()
 
     try
       if (empty(expected) && empty(actual))
-            \ || expected ==# actual
+            \ || ((type(expected) ==# type(actual)) && (expected ==# actual))
         return self.success()
       else
         return self.failed(printf('%s', s:format('Failed asserting', string(expected), string(actual))))

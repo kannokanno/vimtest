@@ -14,6 +14,7 @@ endfunction
 call s:assert(vimtest#assert#new().equals(1, 1))
 call s:assertNot(vimtest#assert#new().equals(1, 0))
 call s:assert(vimtest#assert#new().equals('a', 'a'))
+call s:assertNot(vimtest#assert#new().equals('a', 0))
 call s:assertNot(vimtest#assert#new().equals('a', 'A'))
 call s:assertNot(vimtest#assert#new().equals('a', 'b'))
 call s:assert(vimtest#assert#new().equals([], []))
