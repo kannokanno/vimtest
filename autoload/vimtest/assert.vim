@@ -87,7 +87,7 @@ function! vimtest#assert#new()
       if a:expected == a:arg
         return self.success()
       endif
-      return self.failed(vimtest#message#failure_assert(expected, actual))
+      return self.failed(vimtest#message#failure_assert(a:expected, a:arg))
     catch
       call self.error(v:exception, v:throwpoint)
     endtry
