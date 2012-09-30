@@ -4,10 +4,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! vimtest#message#summary(passed_count, failed_count)
-  " TODO echohlここで書くべきじゃない
-  "if a:failed_count != 0
-  "  echohl FailMsg | echo 'FAILURES!' | echohl None
-  "endif
   return printf("\n\nTest cases run: %d, Passes: %d, Failures: %d\n",
         \ a:passed_count + a:failed_count,
         \ a:passed_count,
@@ -28,11 +24,25 @@ function! vimtest#message#failure_assert_not(expected, actual)
 endfunction
 
 function! vimtest#message#exception(message, throwpoint)
-  return printf('Excpetion:%s in %s', a:message, a:throwpoint)
+  return printf("Excpetion:%s\n       in %s", a:message, a:throwpoint)
 endfunction
 
 function! vimtest#message#not_enough_args(funcname, expected, actual)
   return printf('Not enough args for %s. expected %d but was %d', a:funcname, a:expected, a:actual)
+endfunction
+
+function! vimtest#message#invalid_bool_arg(value)
+  let type = type(a:value)
+  if type ==# type('') || type ==# type(1)
+    return ''
+  endif
+
+  if type ==# type([])
+    let type = 'list'
+  elseif type ==# type({})
+    let type = 'dict'
+  endif
+  return printf('Invalid arg<%s> type %s. valid type is string or num', string(a:value), type)
 endfunction
 
 let &cpo = s:save_cpo

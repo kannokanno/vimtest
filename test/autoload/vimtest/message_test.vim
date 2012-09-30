@@ -22,9 +22,13 @@ function! s:testcase.failure_assert()
 endfunction
 
 function! s:testcase.exception()
-  call self.assert.equals('Excpetion:error_message in point', vimtest#message#exception('error_message', 'point'))
+  call self.assert.equals("Excpetion:error_message\n       in point", vimtest#message#exception('error_message', 'point'))
 endfunction
 
 function! s:testcase.not_enough_args()
   call self.assert.equals('Not enough args for func. expected 3 but was 2', vimtest#message#not_enough_args('func', 3, 2))
+endfunction
+
+function! s:testcase.invalid_bool_arg()
+  call self.assert.equals('Invalid arg<[]> type list. valid type is string or num', vimtest#message#invalid_bool_arg([]))
 endfunction

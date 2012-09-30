@@ -5,6 +5,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" TODO assert本体と結果の保持ロジックが混在している
+" TODO 重複部分のリファクタ
 function! vimtest#assert#new()
   let assert = {
         \ '_progress': [],
@@ -43,7 +45,7 @@ function! vimtest#assert#new()
 
     try
       if (empty(expected) && empty(actual))
-            \ || expected ==# actual
+            \ || ((type(expected) ==# type(actual)) && (expected ==# actual))
         return self.failed(vimtest#message#failure_assert_not(expected, actual))
       else
         return self.success()
@@ -54,11 +56,31 @@ function! vimtest#assert#new()
   endfunction
 
   function! assert.true(...)
-    return self.match(1, string(a:1))
+    let argc = len(a:000)
+    if argc < 1
+      throw vimtest#message#not_enough_args('assert', 1, len(a:000))
+    endif
+    let arg = a:1
+    let type = type(arg)
+    if type ==# type([]) || type ==# type({})
+      throw vimtest#message#invalid_bool_arg(arg)
+    endif
+    let bool = arg ? 1 : 0
+    return self.equals(1, bool)
   endfunction
 
   function! assert.false(...)
-    return self.match(0, string(a:1))
+    let argc = len(a:000)
+    if argc < 1
+      throw vimtest#message#not_enough_args('assert', 1, len(a:000))
+    endif
+    let arg = a:1
+    let type = type(arg)
+    if type ==# type([]) || type ==# type({})
+      throw vimtest#message#invalid_bool_arg(arg)
+    endif
+    let bool = arg ? 1 : 0
+    return self.equals(0, bool)
   endfunction
 
   function! assert.success()
@@ -78,18 +100,6 @@ function! vimtest#assert#new()
     call s:insert(self._failed, self._current_testcase, message)
     call add(self._progress, 'E')
     return 0
-  endfunction
-
-  " TODO assert.equalsで置き換える
-  function! assert.match(expected, arg)
-    try
-      if a:expected == a:arg
-        return self.success()
-      endif
-      return self.failed(vimtest#message#failure_assert(a:expected, a:arg))
-    catch
-      call self.error(v:exception, v:throwpoint)
-    endtry
   endfunction
 
   return assert
