@@ -1,7 +1,15 @@
 let s:testcase = vimtest#new()
 let s:testcase.target = vimtest#assert#new()
 
-function! s:testcase.same_values()
+function! s:testcase._simple_assert(expected, actual)
+  if a:expected ==# a:actual
+    call self.assert.success()
+  else
+    call self.assert.failure(printf('expected:<%s>, actual:<%s>', a:expected, a:actual))
+  endif
+endfunction
+
+function! s:testcase._same_values()
   return [
           \[1, 1],
           \['a', 'a'],
@@ -12,7 +20,7 @@ function! s:testcase.same_values()
         \]
 endfunction
 
-function! s:testcase.not_same_values()
+function! s:testcase._not_same_values()
   return [
           \[1, 0],
           \['a', 0],
@@ -33,40 +41,40 @@ function! s:testcase.false_values()
   return [0, 'a', 'a1']
 endfunction
 
-
 function! s:testcase.equals_expected_true()
-  for args in self.same_values()
-    call self.assert.true(self.target.equals(args[0], args[1]))
+  for args in self._same_values()
+    call self._simple_assert(1, self.target.equals(args[0], args[1]))
   endfor
 endfunction
 
 function! s:testcase.equals_expected_false()
-  for args in self.not_same_values()
-    call self.assert.false(self.target.equals(args[0], args[1]))
+  for args in self._not_same_values()
+    call self._simple_assert(0, self.target.equals(args[0], args[1]))
   endfor
 endfunction
 
 function! s:testcase.not_equals_expected_true()
-  for args in self.not_same_values()
-    call self.assert.true(self.target.not_equals(args[0], args[1]))
+  for args in self._not_same_values()
+    call self._simple_assert(1, self.target.not_equals(args[0], args[1]))
   endfor
 endfunction
 
 function! s:testcase.not_equals_expected_false()
-  for args in self.same_values()
-    call self.assert.false(self.target.not_equals(args[0], args[1]))
+  for args in self._same_values()
+    call self._simple_assert(0, self.target.not_equals(args[0], args[1]))
   endfor
 endfunction
 
 function! s:testcase.true_expected_true()
   for arg in self.true_values()
-    call self.assert.true(self.target.true(arg))
+    call self._simple_assert(1, self.target.true(arg))
+    unlet arg
   endfor
 endfunction
 
 function! s:testcase.true_expected_false()
   for arg in self.false_values()
-    call self.assert.false(self.target.true(arg))
+    call self._simple_assert(0, self.target.true(arg))
     unlet arg
   endfor
 endfunction
@@ -84,3 +92,4 @@ function! s:testcase.false_expected_false()
     unlet arg
   endfor
 endfunction
+

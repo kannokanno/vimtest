@@ -89,10 +89,15 @@ function! vimtest#assert#new()
     return 1
   endfunction
 
-  function! assert.failed(message)
+  " TODO リファクタ過程
+  function! assert.failure(message)
     call s:insert(self._failed, self._current_testcase, a:message)
     call add(self._progress, 'F')
     return 0
+  endfunction
+
+  function! assert.failed(message)
+    return self.falure(a:message)
   endfunction
 
   function! assert.error(exception, throwpoint)
