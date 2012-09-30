@@ -22,16 +22,16 @@ call s:assert(vimtest#assert#new().equals([1], [1]))
 call s:assert(vimtest#assert#new().equals(['a'], ['a']))
 call s:assertNot(vimtest#assert#new().equals(['a'], ['b']))
 
-" notEquals
-call s:assertNot(vimtest#assert#new().notEquals(1, 1))
-call s:assert(vimtest#assert#new().notEquals(1, 0))
-call s:assertNot(vimtest#assert#new().notEquals('a', 'a'))
-call s:assert(vimtest#assert#new().notEquals('a', 'A'))
-call s:assert(vimtest#assert#new().notEquals('a', 'b'))
-call s:assertNot(vimtest#assert#new().notEquals([], []))
-call s:assertNot(vimtest#assert#new().notEquals([1], [1]))
-call s:assertNot(vimtest#assert#new().notEquals(['a'], ['a']))
-call s:assert(vimtest#assert#new().notEquals(['a'], ['b']))
+" not_equals
+call s:assertNot(vimtest#assert#new().not_equals(1, 1))
+call s:assert(vimtest#assert#new().not_equals(1, 0))
+call s:assertNot(vimtest#assert#new().not_equals('a', 'a'))
+call s:assert(vimtest#assert#new().not_equals('a', 'A'))
+call s:assert(vimtest#assert#new().not_equals('a', 'b'))
+call s:assertNot(vimtest#assert#new().not_equals([], []))
+call s:assertNot(vimtest#assert#new().not_equals([1], [1]))
+call s:assertNot(vimtest#assert#new().not_equals(['a'], ['a']))
+call s:assert(vimtest#assert#new().not_equals(['a'], ['b']))
 
 " true
 call s:assert(vimtest#assert#new().true(1))

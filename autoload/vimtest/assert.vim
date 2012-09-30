@@ -34,7 +34,7 @@ function! vimtest#assert#new()
   endfunction
 
   " TODO キャメルケースに違和感
-  function! assert.notEquals(...)
+  function! assert.not_equals(...)
     let argc = len(a:000)
     if argc < 2
       throw vimtest#message#not_enough_args('assert', 2, len(a:000))

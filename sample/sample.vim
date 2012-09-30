@@ -40,9 +40,9 @@ function! s:testcase.equals()
   call self.assert.equals({'a':1}, {'a':1})
 endfunction
 
-function! s:testcase.notEquals()
-  call self.assert.notEquals('a', 'A')
-  call self.assert.notEquals(['b', 'a'], ['a', 'b'])
+function! s:testcase.not_equals()
+  call self.assert.not_equals('a', 'A')
+  call self.assert.not_equals(['b', 'a'], ['a', 'b'])
 endfunction
 
 function! s:testcase.true()
