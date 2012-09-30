@@ -1,8 +1,5 @@
 let s:testcase = vimtest#new()
-
-function! s:testcase.setup()
-  let self.custom = {'target': vimtest#outputter#string#new()}
-endfunction
+let s:testcase.target = vimtest#outputter#string#new()
 
 function! s:testcase.create_progress_message()
   let results = [
@@ -11,12 +8,7 @@ function! s:testcase.create_progress_message()
 
   call self.assert.equals(
         \ '.FF.',
-        \ self.custom.target.create_progress_message(results))
-endfunction
-
-function! s:create_progress_result(progress_chars)
-  let assert = {'_progress': a:progress_chars}
-  return {'assert': assert}
+        \ self.target.create_progress_message(results))
 endfunction
 
 function! s:testcase.create_failed_message()
@@ -30,15 +22,7 @@ function! s:testcase.create_failed_message()
 
   call self.assert.equals(
         \ message1 . message2,
-        \ self.custom.target.create_failed_message(results))
-endfunction
-
-function! s:create_message_result(message)
-  let result = {'message': a:message}
-  function! result._result()
-    return self.message
-  endfunction
-  return result
+        \ self.target.create_failed_message(results))
 endfunction
 
 function! s:testcase.create_summary_message()
@@ -49,8 +33,9 @@ function! s:testcase.create_summary_message()
 
   call self.assert.equals(
         \ vimtest#message#summary(5, 3),
-        \ self.custom.target.create_summary_message(results))
+        \ self.target.create_summary_message(results))
 endfunction
+
 
 function! s:create_count_result(passed, failed)
   let assert = {
@@ -59,3 +44,17 @@ function! s:create_count_result(passed, failed)
         \ }
   return {'assert': assert}
 endfunction
+
+function! s:create_progress_result(progress_chars)
+  let assert = {'_progress': a:progress_chars}
+  return {'assert': assert}
+endfunction
+
+function! s:create_message_result(message)
+  let result = {'message': a:message}
+  function! result._result()
+    return self.message
+  endfunction
+  return result
+endfunction
+
