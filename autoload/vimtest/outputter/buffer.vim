@@ -5,7 +5,7 @@ set cpo&vim
 
 let s:outputter = {
 \   'config': {
-\     'name'     : '[vimtest output]',
+\     'name'     : '[vimtest]',
 \     'filetype' : 'vimtest',
 \     'append'   : 0,
 \     'split'    : 'split',
