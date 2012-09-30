@@ -3,14 +3,13 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:outputter = {
-\   'config': {
-\     'name'     : '[vimtest]',
-\     'filetype' : 'vimtest',
-\     'append'   : 0,
-\     'split'    : 'split',
-\   }
-\ }
+let s:outputter = vimtest#outputter#instance('buffer')
+let s:outputter.config = {
+      \   'name'     : '[vimtest]',
+      \   'filetype' : 'vimtest',
+      \   'append'   : 0,
+      \   'split'    : 'split',
+      \ }
 
 function! s:outputter.init()
   let self._append = self.config.append

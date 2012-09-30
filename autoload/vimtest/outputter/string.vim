@@ -3,7 +3,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:outputter = vimtest#outputter#instance()
+let s:outputter = vimtest#outputter#instance('string')
 
 function! s:outputter.out(runners)
   let message = ''
