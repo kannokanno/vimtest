@@ -1,6 +1,6 @@
 let s:testcase = vimtest#new()
 
-function! s:testcase.outtpuer_typenames()
+function! s:testcase._outtpuer_typenames()
   return ['buffer', 'string', 'stdout']
 endfunction
 
@@ -10,7 +10,7 @@ function! s:testcase.get_outputter_default_is_buffer()
 endfunction
 
 function! s:testcase.get_outputter_by_typename()
-  for typename in self.outtpuer_typenames()
+  for typename in self._outtpuer_typenames()
     call self.assert.equals(typename, vimtest#outputter#get(typename)._name)
   endfor
 endfunction

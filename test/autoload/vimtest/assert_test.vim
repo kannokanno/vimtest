@@ -5,7 +5,7 @@ function! s:testcase._simple_assert(expected, actual)
   if a:expected ==# a:actual
     call self.assert.success()
   else
-    call self.assert.failure(printf('expected:<%s>, actual:<%s>', a:expected, a:actual))
+    call self.assert.fail(printf('expected:<%s>, actual:<%s>', a:expected, a:actual))
   endif
 endfunction
 
@@ -33,11 +33,11 @@ function! s:testcase._not_same_values()
         \]
 endfunction
 
-function! s:testcase.true_values()
+function! s:testcase._true_values()
   return [1, '1', '1a', -1]
 endfunction
 
-function! s:testcase.false_values()
+function! s:testcase._false_values()
   return [0, 'a', 'a1']
 endfunction
 
@@ -66,28 +66,28 @@ function! s:testcase.not_equals_expected_false()
 endfunction
 
 function! s:testcase.true_expected_true()
-  for arg in self.true_values()
+  for arg in self._true_values()
     call self._simple_assert(1, self.target.true(arg))
     unlet arg
   endfor
 endfunction
 
 function! s:testcase.true_expected_false()
-  for arg in self.false_values()
+  for arg in self._false_values()
     call self._simple_assert(0, self.target.true(arg))
     unlet arg
   endfor
 endfunction
 
 function! s:testcase.true_expected_false()
-  for arg in self.false_values()
+  for arg in self._false_values()
     call self.assert.true(self.target.false(arg))
     unlet arg
   endfor
 endfunction
 
 function! s:testcase.false_expected_false()
-  for arg in self.true_values()
+  for arg in self._true_values()
     call self.assert.false(self.target.false(arg))
     unlet arg
   endfor

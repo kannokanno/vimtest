@@ -11,15 +11,19 @@ let s:testcase = vimtest#new('get_testcases')
 function! s:testcase.dummy_test1()
   " dummy
 endfunction
-function! s:testcase.dummy_test2()
+function! s:testcase._dummy_test2()
+  " dummy
+endfunction
+function! s:testcase.dummy_test3()
   " dummy
 endfunction
 
 function! s:testcase.testcase_names()
   let expected = [
         \'dummy_test1',
-        \'dummy_test2',
+        \'dummy_test3',
         \'testcase_names',
         \]
-  call self.assert.equals(expected, self._get_testcases())
+  " 順序無視
+  call self.assert.equals(sort(expected), sort(self._get_testcases()))
 endfunction
