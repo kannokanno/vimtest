@@ -14,7 +14,7 @@ endfunction
 function! vimtest#message#failure_assert(expected, actual)
   let expected = vimtest#util#to_string(a:expected)
   let actual = vimtest#util#to_string(a:actual)
-  return printf("Failed asserting expected <%s> but was <%s>", expected, actual)
+  return s:assert_failure_format(expected, actual)
 endfunction
 
 function! vimtest#message#failure_assert_not(expected, actual)
@@ -24,7 +24,7 @@ function! vimtest#message#failure_assert_not(expected, actual)
 endfunction
 
 function! vimtest#message#exception(message, throwpoint)
-  return printf("Excpetion:%s\n       in %s", a:message, a:throwpoint)
+  return printf("Excpetion:%s\n   in %s", a:message, a:throwpoint)
 endfunction
 
 function! vimtest#message#not_enough_args(funcname, expected, actual)
@@ -43,6 +43,15 @@ function! vimtest#message#invalid_bool_arg(value)
     let type = 'dict'
   endif
   return printf('Invalid arg<%s> type %s. valid type is string or num', string(a:value), type)
+endfunction
+
+function! s:assert_failure_format(expected, actual)
+  let pattern  = "Failed asserting that two values are equal"
+  let pattern .= "\n"
+  let pattern .= "   - expected:%s"
+  let pattern .= "\n"
+  let pattern .= "   +   actual:%s"
+  return printf(pattern, a:expected, a:actual)
 endfunction
 
 let &cpo = s:save_cpo

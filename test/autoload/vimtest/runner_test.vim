@@ -2,7 +2,7 @@ let s:testcase = vimtest#new('name')
 
 function! s:testcase.construct_arg_is_runner_name()
   call self.assert.equals('hoge', vimtest#runner#new('hoge')._name)
-  call self.assert.equals('ほげ', vimtest#runner#new('ほげ')._name)
+  call self.assert.equals('ほげ', vimtest#runner#new('ほ')._name)
 endfunction
 
 

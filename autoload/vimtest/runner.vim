@@ -53,8 +53,8 @@ function! vimtest#runner#new(name)
       call add(failed_messages, printf("\n# %s", self._name))
       for i in range(len(self.assert._failed))
         let f = self.assert._failed[i]
-        call add(failed_messages, printf("  %d) %s", i+1, f.testcase))
-        call add(failed_messages, printf("      %s\n", f.message))
+        call add(failed_messages, printf(" %d) '%s' is FAILED", i+1, f.testcase))
+        call add(failed_messages, printf("  %s\n", f.message))
       endfor
     endif
     return join(failed_messages, "\n")
