@@ -13,6 +13,13 @@ endfunction
 function! vimtest#run(path, type)
   try
     call extend(s:vimtest, s:parse_args(a:path, a:type))
+    if isdirectory(s:vimtest.testfile)
+      " TODO v0.0.3 feature
+      echohl ErrorMsg | echo 'ディレクトリを指定しての実行は未実装です' | echohl None
+      call vimtest#reset()
+      return
+    endif
+
     " TODO どんなソースもsourceしちゃう:命名規則に沿ったファイルに絞ってsource
     silent! execute ':source ' . s:vimtest.testfile
     if !empty(s:vimtest.runners)
@@ -23,7 +30,7 @@ function! vimtest#run(path, type)
       call s:vimtest.outputter.out(s:vimtest.runners)
     endif
   catch
-    echoerr v:errmsg
+    echoerr v:exception
   finally
     call vimtest#reset()
   endtry
