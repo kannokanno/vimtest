@@ -89,13 +89,14 @@ function! vimtest#assert#new()
     return 1
   endfunction
 
-  " TODO リファクタ過程
-  function! assert.fail(message)
-    call s:insert(self._failed, self._current_testcase, a:message)
+  function! assert.fail(...)
+    let message = len(a:000) > 0 ? a:1 : 'called assert.fail()'
+    call s:insert(self._failed, self._current_testcase, message)
     call add(self._progress, 'F')
     return 0
   endfunction
 
+  " TODO Deprecated. リファクタ過程
   function! assert.failed(message)
     return self.fail(a:message)
   endfunction
