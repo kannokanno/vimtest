@@ -1,61 +1,54 @@
-# vimtest(v0.0.2)
 
-## What this script
+VimTest
+=======
 
-Testing plugin for Vim script
+Vim script用テストフレームワーク
+xUnitに近い形での記述が出来ます。
 
-## Usage
+使用例
+======
 
-initialize testcase instance.
+### テストコード(成功例)
 
-    let testcase = vimtest#new('sample test')
-
-add test method
-
-    function! testcase.sum()
-      let x = 1
-      let y = 2
-      call self.assert.equals(3, x + y)
+    let s:testcase = vimtest#new('success test')
+    function! s:testcase.sum()
+      call self.assert.equals(3, 1 + 2)
     endfunction
 
-finally write 'call vimtest#run()' for run testcase
-
-    call vimtest#run()
-
-
-run
-
-    :source %
-
-result
+### 実行結果
 
     .
+
     Test cases run: 1, Passes: 1, Failures: 0
 
-failed message
+### テストコード(失敗例)
 
-
-    let testcase = vimtest#new('failed test')
-    function! testcase.sum()
-      let x = 1
-      let y = 2
-      call self.assert.equals(4, x + y)
+    let s:testcase = vimtest#new('failure test')
+    function! s:testcase.sum()
+      call self.assert.equals(3, 1 + 1)
     endfunction
-    call vimtest#run()
 
-
-result
+### 実行結果
 
     F
+    # failure test
+     1) 'sum' is FAILED
+      Failed asserting that two values are equal
+       - expected:3
+       +   actual:2
 
-    # failed test
-      1) sum
-          Failed asserting expected:<4> but was:<3>
 
-    FAILURES!
     Test cases run: 1, Passes: 0, Failures: 1
 
+実行方法
+========
 
-## more
+テストコードが書かれているファイルに対して以下のコマンドを実行します。
 
-@see sample/sample.vim
+    :VimTest
+
+引数なしでこのコマンドを実行すると、現在のバッファに対してテストを行います。
+専用の出力バッファが作成され、そちらにテスト結果を出力します。
+
+
+詳しくはhelpをお読みください。
