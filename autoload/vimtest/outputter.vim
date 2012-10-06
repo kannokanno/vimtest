@@ -13,8 +13,6 @@ endfunction
 function! vimtest#outputter#get(type)
   if a:type ==? 'buffer'
     return vimtest#outputter#buffer#new()
-  elseif a:type ==? 'string'
-    return vimtest#outputter#string#new()
   elseif a:type ==? 'stdout'
     return vimtest#outputter#stdout#new()
   else
