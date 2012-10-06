@@ -64,7 +64,7 @@ function! s:testcase.failed()
   call self.assert.equals(1, 2)
 endfunction
 function! s:testcase.error_one()
-  call self.assert.equals(1, [])
+  call self.assert.equals(1, [)
 endfunction
 function! s:testcase.error_two()
   hoge
@@ -108,5 +108,4 @@ function! s:testcase.teardown()
 endfunction
 function! s:testcase.shutdown()
   echo 'shutdown'
-  echo ''
 endfunction

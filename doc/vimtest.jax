@@ -1,0 +1,387 @@
+*vimtest.txt*	Vim scriptのテストを実行します
+
+Version: 0.0.2
+Author: kanno <akapanna@gmail.com>
+
+==============================================================================
+目次						*vimtest-contents*
+
+概要						|vimtest-introduction|
+使い方						|vimtest-usage|
+テストケース					|vimtest-testcase|
+テンプレートメソッド				|vimtest-template-method|
+アサーション					|vimtest-assert|
+カスタムプロパティ				|vimtest-custom|
+コマンド					|vimtest-command|
+サンプル					|vimtest-example|
+更新履歴					|vimtest-changelog|
+
+
+==============================================================================
+概要						*vimtest-introduction*
+
+*vimtest* はVim scriptのテストコードを実行するVimプラグインです。
+
+最新版:
+http://github.com/kannokanno/vimtest
+
+
+==============================================================================
+使い方						*vimtest-usage*
+
+VimTestを使ってテストを作るのに最低限必要な手順は次の4つです。
+  1. テストケースを作成する
+  2. テストメソッドを定義する
+  3. テストメソッド内でアサートを記述する
+  4. テストを実行する
+
+
+1. テストケースを作成する			*vimtest-create-testcase*
+テストケースはxUnitにおけるテストクラスと同じ単位になります。
+作成には *vimtest#new()* を使用します。
+詳細は *vimtest-testcase* を参照ください。
+
+>
+	let s:testcase = vimtest#new()
+<
+
+2. テストメソッドを定義する			*vimtest-define-testmethod*
+s:testcaseは辞書になっているので、このインスタンスに対してテストメソッドを
+追加定義します。
+他言語のテストフレームワークと同様に、setUpやtearDownも使えます。
+詳細は *vimtest-template-method* を参照ください。
+
+>
+	let s:testcase = vimtest#new()
+	function! s:testcase.sum()
+	endfunction
+<
+
+3. テストメソッド内でアサートを記述する		*vimtest-write-assert*
+テストメソッド内ではs:testcaseに予め定義されているアサートが使えます。
+詳細は *vimtest-assert* を参照ください。
+
+>
+	let s:testcase = vimtest#new()
+	function! s:testcase.sum()
+	  call self.assert.equals(3, 1 + 2)
+	endfunction
+<
+
+4. テストを実行する				*vimtest-execute*
+テストの実行には *:VimTest* コマンドを使います。
+詳細は *vimtest-command* を参照ください。
+
+これまでに書いたテストを保存して実行すると、VimTest用のバッファが生成されて
+次のように出力されます。
+>
+	.
+	
+	Test cases run: 1, Passes: 1, Failures: 0
+<
+
+
+==============================================================================
+テストケース					*vimtest-testcase*
+
+vimtest#new([{name}])				*vimtest#new()*
+	テストケース用のインスタンスを生成します。
+	{name} にはテストを識別するための名前をして出来ます。{name} を省略した
+	場合は現在のファイル名が設定されます。
+
+	{name} を指定した場合の例を以下に示します。
+>
+	" ~/vimtest_sample.vim
+	let s:testcase = vimtest#new('サンプルテスト')
+	function! s:testcase.sum()
+	  " わざと失敗するテストを実行し、出力を確認する
+	  call self.assert.equals(3, 2)
+	endfunction
+<
+>
+	:VimTest
+
+	F
+	# サンプルテスト
+	 1) 'sum' is FAILED
+	  Failed asserting that two values are equal
+	   - expected:3
+	   +   actual:2
+
+
+	Test cases run: 1, Passes: 0, Failures: 1
+<
+
+	{name} を省略した場合の例を以下に示します。
+>
+	" ~/vimtest_sample.vim
+	let s:testcase = vimtest#new()
+	function! s:testcase.sum()
+	  " わざと失敗するテストを実行し、出力を確認する
+	  call self.assert.equals(3, 2)
+	endfunction
+<
+>
+	:VimTest
+
+	F
+	# vimtest_sample.vim
+	 1) 'sum' is FAILED
+	  Failed asserting that two values are equal
+	   - expected:3
+	   +   actual:2
+
+
+	Test cases run: 1, Passes: 0, Failures: 1
+<
+
+
+==============================================================================
+テンプレートメソッド				*vimtest-template-method*
+
+*vimtest#new()* で生成したテストケースにはいくつかのテンプレートメソッドを定義
+出来ます。これは他言語のxUnitフレームワークによく見られるテンプレートメソッド
+と機能的に同じです。
+
+startup()					*vimtest-template-startup*
+	テストケースが初期化された後に一度だけ実行されます。
+
+setup()						*vimtest-template-setup*
+	各テストメソッドが実行される前に実行されます。
+
+teardown()					*vimtest-template-teardown*
+	各テストメソッドが実行された後に実行されます。
+
+shutdown()					*vimtest-template-shutdown*
+	全てのテストが終了した後に一度だけ実行されます。
+
+
+これらテンプレートメソッドの流れを確認するためのサンプルを以下に示します。
+>
+	let s:testcase = vimtest#new()
+	function! s:testcase.startup()
+	  echo 'startup'
+	endfunction
+	function! s:testcase.setup()
+	  echo '  setup'
+	endfunction
+	function! s:testcase.test_one()
+	  echo '   test one'
+	endfunction
+	function! s:testcase.test_two()
+	  echo '   test two'
+	endfunction
+	function! s:testcase.test_three()
+	  echo '   test three'
+	endfunction
+	function! s:testcase.teardown()
+	  echo '  teardown'
+	endfunction
+	function! s:testcase.shutdown()
+	  echo 'shutdown'
+	endfunction
+<
+
+このサンプルテストを実行すると以下のように出力されます。
+NOTE:各テストメソッドの順序は保証されないため、この例と異なる可能性があります。
+>
+	:VimTest
+	startup
+	  setup
+	   test one
+	  teardown
+	  setup
+	   test two
+	  teardown
+	  setup
+	   test three
+	  teardown
+	shutdown
+	
+
+	Test cases run: 0, Passes: 0, Failures: 0
+<
+
+
+==============================================================================
+アサーション					*vimtest-assert*
+
+各テストメソッド内ではいくつかのアサートを呼び出すことができます。これはテスト
+ケースに標準で定義されている辞書関数です。
+self.assertを使ってアサート用のオブジェクトを取り出し、そこから各アサートメ
+ソッドを呼び出します。
+例えば二つの引数が同一であることを調べるためのequalsメソッドは次のように使いま
+す。
+
+>
+	let s:testcase = vimtest#new()
+	function! s:testcase.sum()
+	  call self.assert.equals(3, 1 + 2)
+	endfunction
+<
+
+assert.equals(expected, actual)			*vimtest-assert-equals*
+	expected と actual が同一であるか検証します。二つの値が異なる場合には
+	テストが失敗します。
+	このメソッドにおける同一とは型が同じかつ==#の値が1であることを意味します。
+	型が違う場合、大文字小文字の違い、リスト要素の順序の違いなどは失敗扱い
+	となります。
+
+テストが成功する例を以下に示します。
+>
+	let s:testcase = vimtest#new('assert example')
+	function! s:testcase.equals_success()
+	    call self.assert.equals(1, 1)
+	    call self.assert.equals('a', 'a')
+	    call self.assert.equals([], [])
+	    call self.assert.equals([1], [1])
+	    call self.assert.equals(['a'], ['a'])
+	    call self.assert.equals({'a':1, 'b':2}, {'a':1, 'b':2})
+	endfunction
+<
+
+テストが失敗する例を以下に示します。
+>
+	function! s:testcase.equals_failure()
+	  call self.assert.equals('a', 'A')
+	  call self.assert.equals(['b', 'a'], ['a', 'b'])
+	endfunction
+<
+
+assert.not_equals(expected, actual)		*vimtest-assert-not_equals*
+	expected と actual が同一でないか検証します。これは
+	*vimtest-assert-equals* と反対の動きになります。
+
+assert.true(actual)			*vimtest-assert-true*
+	actual が以下のいずれかであるか検証します。該当する値でなかった場合に
+	テストが失敗します。
+	  - 0以外の数字(負の数字含む)
+	  - 文字列を数字に変換した場合に0以外となる('1'、'1a'など)
+
+	-1や'1a'なども成功値としているのはVimの仕様に合わせているためです。
+	例えば以下の例では a が出力されます。
+>
+	if -1
+	  echo 'a'
+	else
+	  echo 'b'
+	endif
+<
+
+テストが成功する例を以下に示します。
+>
+	let s:testcase = vimtest#new('assert example')
+	function! s:testcase.true_success()
+	    call self.assert.true(1)
+	    call self.assert.true('1')
+	    call self.assert.true('1a')
+	    call self.assert.true(-1)
+	endfunction
+<
+
+テストが失敗する例を以下に示します。
+>
+	function! s:testcase.true_failure()
+	    call self.assert.true(0)
+	    call self.assert.true('a')
+	    call self.assert.true('a1')
+	    call self.assert.true([])
+	endfunction
+<
+
+assert.false(actual)				*vimtest-assert-false*
+	actual が0かどうかを検証します。0以外の値だった場合にテストが失敗しま
+	す。これは *vimtest-assert-true* と反対の動きになります。
+
+
+==============================================================================
+カスタムプロパティ				*vimtest-custom*
+
+*vimtest#new()* で作成されるテストケースの実体は辞書のため、ユーザー側にて独自に
+変数や辞書関数を定義することができます。これらは各テストメソッドから自由に参照
+出来るため、固定値やテスト対象の初期化に使うことが出来ます。
+xUnitテストフレームにおける、テストクラス内での変数やヘルパー関数に似ていま
+す。
+
+全てのテストで共通して使う固定値の場合は次のように定義すればよいでしょう。
+>
+	let s:testcase = vimtest#new()
+	" 期待値が固定のため変数定義する
+	let s:testcase.expected = 99
+
+	function! s:testcase.sample1()
+	  call self.assert.equals(self.expected, SomeFunction1())
+	endfunction
+	function! s:testcase.sample2()
+	  call self.assert.equals(self.expected, SomeFunction2())
+	endfunction
+<
+
+辞書関数の場合も同様に定義出来ます。
+ただし辞書関数の場合、先頭に_を付ける必要があります。_が付いていないものは全て
+テストメソッドとして実行されるので注意してください。
+>
+	function! s:testcase._some_helper()
+	  " do something
+	endfunction
+<
+
+もしテスト毎に定義し直したい場合はテンプレートメソッド内で定義します。
+テンプレートメソッドについては *vimtest-template-method* を参照して下さい。
+次の例ではテストメソッド毎に定義する必要を示せてはいませんが、使い方に関するサ
+ンプルにはなります。
+>
+	let s:testcase = vimtest#new()
+	function! s:testcase.setup()
+	  let self._ = {'expected': 1}
+	  function! self._.data_provider()
+	    return ['a', 'b', 'c']
+	  endfunction
+	endfunction
+	function! s:testcase.sample()
+	  for arg in self._.data_provider()
+	    call self.assert.equals(self._.expected, SomeFunction(arg))
+	  endfor
+	endfunction
+<
+
+
+==============================================================================
+コマンド					*vimtest-command*
+
+						*:VimTest*
+:VimTest [{file}]
+	このコマンドは *:VimTestBuffer* のエイリアスです。
+
+						*:VimTestBuffer*
+:VimTestBuffer [{file}]
+	テストを実行します。テスト対象となるファイルを {file} に指定出来ます。
+	{file} を省略した場合は現在のファイルが対象となります。
+	現在はディレクトリに対するサポートはありません。
+	テストの実行結果を専用の出力バッファに表示します。
+
+						*:VimTestStdout*
+:VimTestStdout [{file}]
+	テストを実行します。テスト対象となるファイルを {file} に指定出来ます。
+	{file} を省略した場合は現在のファイルが対象となります。
+	現在はディレクトリに対するサポートはありません。
+	テストの実行結果を標準出力に表示します。
+
+
+==============================================================================
+サンプル					*vimtest-example*
+
+vimtest/sampleにいくつかのサンプルがあります。参考にしてください。
+
+
+==============================================================================
+更新履歴					*vimtest-changelog*
+
+0.0.2	2012-10-06
+	- 日本語helpの追加
+	- いくつかのバグを修正
+
+0.0.1	2012-03-31
+	- 初版
+
+vim:tw=78:ts=8:ft=help:norl:

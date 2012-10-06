@@ -1,0 +1,16 @@
+!_TAG_FILE_ENCODING	utf-8	//
+:VimTest	vimtest.jax	/*:VimTest*
+vimtest	vimtest.jax	/*vimtest*
+vimtest#new()	vimtest.jax	/*vimtest#new()*
+vimtest-assert	vimtest.jax	/*vimtest-assert*
+vimtest-command	vimtest.jax	/*vimtest-command*
+vimtest-contents	vimtest.jax	/*vimtest-contents*
+vimtest-create-testcase	vimtest.jax	/*vimtest-create-testcase*
+vimtest-define-testmethod	vimtest.jax	/*vimtest-define-testmethod*
+vimtest-execute	vimtest.jax	/*vimtest-execute*
+vimtest-introduction	vimtest.jax	/*vimtest-introduction*
+vimtest-template-method	vimtest.jax	/*vimtest-template-method*
+vimtest-testcase	vimtest.jax	/*vimtest-testcase*
+vimtest-usage	vimtest.jax	/*vimtest-usage*
+vimtest-write-assert	vimtest.jax	/*vimtest-write-assert*
+vimtest.txt	vimtest.jax	/*vimtest.txt*
