@@ -25,7 +25,7 @@ function! vimtest#run(path, type)
     if !empty(s:vimtest.runners)
       call s:vimtest.outputter.init()
       for r in s:vimtest.runners
-        call r.run()
+        call r._run()
       endfor
       call s:vimtest.outputter.out(s:vimtest.runners)
     endif

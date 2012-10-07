@@ -22,7 +22,7 @@ function! vimtest#runner#new(name)
     " override by user
   endfunction
 
-  function! runner.run()
+  function! runner._run()
     try
       call self.startup()
       for func in self._get_testcases()
@@ -61,17 +61,15 @@ function! vimtest#runner#new(name)
 
   function! runner._get_testcases()
     " TODO dirty
-    let pattern = join([
-          \ 'type(self[v:val]) == type(function("tr"))',
-          \ 'v:val != "run"',
-          \ 'v:val !~ "^_"',
-          \ 'v:val !~ "^assert"',
-          \ 'v:val !~ "^startup"',
-          \ 'v:val !~ "^setup"',
-          \ 'v:val !~ "^teardown"',
-          \ 'v:val !~ "^shutdown"',
+    let ignore_pattern = join([
+          \ 'type(self[v:val]) ==# type(function("tr"))',
+          \ 'v:val !~# "^_"',
+          \ 'v:val !=# "startup"',
+          \ 'v:val !=# "setup"',
+          \ 'v:val !=# "teardown"',
+          \ 'v:val !=# "shutdown"',
           \ ], '&&')
-    return filter(keys(self), pattern)
+    return filter(keys(self), ignore_pattern)
   endfunction
 
   return runner
