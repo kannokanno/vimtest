@@ -294,6 +294,13 @@ assert.false(actual)				*vimtest-assert-false*
 	actual が0かどうかを検証します。0以外の値だった場合にテストが失敗しま
 	す。これは |vimtest-assert-true| と反対の動きになります。
 
+assert.success()				*vimtest-assert-success*
+	強制的にテストを成功させます。
+
+assert.fail([{message}])			*vimtest-assert-fail*
+	強制的にテストを失敗させます。失敗時のメッセージを {message} で指定出
+        来ます。
+
 
 ==============================================================================
 カスタムプロパティ				*vimtest-custom*
