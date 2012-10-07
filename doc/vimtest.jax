@@ -291,8 +291,9 @@ assert.true(actual)			*vimtest-assert-true*
 <
 
 assert.false(actual)				*vimtest-assert-false*
-	actual が0かどうかを検証します。0以外の値だった場合にテストが失敗しま
-	す。これは |vimtest-assert-true| と反対の動きになります。
+	actual を数字に変換した際の値が0かどうかを検証します。0以外の値だった
+	場合にテストが失敗します。これは |vimtest-assert-true| と反対の動きに
+	なります。
 
 assert.success()				*vimtest-assert-success*
 	強制的にテストを成功させます。
@@ -336,8 +337,8 @@ xUnitテストフレームにおける、テストクラス内での変数やヘ
 
 もしテスト毎に定義し直したい場合はテンプレートメソッド内で定義します。
 テンプレートメソッドについては |vimtest-template-method| を参照して下さい。
-次の例ではテストメソッド毎に定義する必要を示せてはいませんが、使い方に関するサ
-ンプルにはなります。
+次の例ではテストメソッド毎に定義する必要性を示せてはいませんが、使い方に関する
+サンプルにはなります。
 >
 	let s:testcase = vimtest#new()
 	function! s:testcase.setup()
@@ -366,8 +367,8 @@ xUnitテストフレームにおける、テストクラス内での変数やヘ
 
 
 また、テストメソッド名を"_"から始めるとそのテストは実行されません。
-テストケースに辞書関数を追加したいが、テストとして実行させたくない時にこのルー
-ルを利用できます。
+テストケースのオブジェクトに辞書関数を追加したいが、テストとして実行させたくな
+い時にこのルールを利用できます。
 >
 	let s:testcase = vimtest#new()
 	function! s:testcase._not_test()
