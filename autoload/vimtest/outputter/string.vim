@@ -5,11 +5,11 @@ set cpo&vim
 
 let s:outputter = vimtest#outputter#instance('string')
 
-function! s:outputter.out(runners)
+function! s:outputter.out(results)
   let message = ''
-  let message .= self.create_progress_message(a:runners)
-  let message .= self.create_failed_message(a:runners)
-  let message .= self.create_summary_message(a:runners)
+  let message .= self.create_progress_message(a:results)
+  let message .= self.create_failed_message(a:results)
+  let message .= self.create_summary_message(a:results)
   return message
 endfunction
 
@@ -17,7 +17,7 @@ endfunction
 function! s:outputter.create_progress_message(results)
   let message = ''
   for r in a:results
-    for p in r.assert._progress
+    for p in r._progress
       let message .= p
     endfor
   endfor
@@ -28,8 +28,8 @@ endfunction
 function! s:outputter.create_failed_message(results)
   let message = ''
   for r in a:results
-    if !empty(r._result())
-      let message .= r._result()
+    if !empty(r.failed_summary())
+      let message .= r.failed_summary()
     endif
   endfor
   return message
@@ -40,8 +40,8 @@ function! s:outputter.create_summary_message(results)
   let total_passed_count = 0
   let total_failed_count = 0
   for r in a:results
-    let total_passed_count += len(r.assert._passed)
-    let total_failed_count += len(r.assert._failed)
+    let total_passed_count += len(r._passed)
+    let total_failed_count += len(r._failed)
   endfor
   return vimtest#message#summary(total_passed_count, total_failed_count)
 endfunction

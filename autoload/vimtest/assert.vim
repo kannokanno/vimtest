@@ -1,19 +1,17 @@
-" FILE: vimtest#assert#assert.vim
 " AUTHOR: kanno <akapanna@gmail.com>
-" Last Change: 2012 Mar 31
 " License: This file is placed in the public domain.
 let s:save_cpo = &cpo
 set cpo&vim
 
-" TODO assert本体と結果の保持ロジックが混在している
 " TODO 重複部分のリファクタ
-function! vimtest#assert#new()
+function! vimtest#assert#new(name)
   let assert = {
-        \ '_progress': [],
-        \ '_passed': [],
-        \ '_failed': [],
-        \ '_current_testcase': '',
+        \ 'result' : vimtest#result#new(a:name),
         \ }
+
+  function! assert.set_current_testcase(func_name)
+    let self.result._current_testcase = a:func_name
+  endfunction
 
   function! assert.equals(...)
     let argc = len(a:000)
@@ -28,7 +26,7 @@ function! vimtest#assert#new()
             \ || ((type(expected) ==# type(actual)) && (expected ==# actual))
         return self.success()
       else
-        return self.failed(vimtest#message#failure_assert(expected, actual))
+        return self.fail(vimtest#message#failure_assert(expected, actual))
       endif
     catch
       call self.error(v:exception, v:throwpoint)
@@ -46,7 +44,7 @@ function! vimtest#assert#new()
     try
       if (empty(expected) && empty(actual))
             \ || ((type(expected) ==# type(actual)) && (expected ==# actual))
-        return self.failed(vimtest#message#failure_assert_not(expected, actual))
+        return self.fail(vimtest#message#failure_assert_not(expected, actual))
       else
         return self.success()
       endif
@@ -83,39 +81,25 @@ function! vimtest#assert#new()
     return self.equals(0, bool)
   endfunction
 
+  " shortcut
   function! assert.success()
-    call insert(self._passed, {})
-    call add(self._progress, '.')
+    call self.result.success()
     return 1
   endfunction
 
+  " shortcut
   function! assert.fail(...)
-    let message = len(a:000) > 0 ? a:1 : 'called assert.fail()'
-    call s:insert(self._failed, self._current_testcase, message)
-    call add(self._progress, 'F')
+    call self.result.fail(a:1)
     return 0
   endfunction
 
-  " TODO Deprecated. リファクタ過程
-  function! assert.failed(message)
-    return self.fail(a:message)
-  endfunction
-
+  " shortcut
   function! assert.error(exception, throwpoint)
-    let message = vimtest#message#exception(a:exception, a:throwpoint)
-    call s:insert(self._failed, self._current_testcase, message)
-    call add(self._progress, 'E')
+    call self.result.error(a:exception, a:throwpoint)
     return 0
   endfunction
 
   return assert
-endfunction
-
-function! s:insert(list, testcase, message)
-  call insert(a:list, {
-        \ 'testcase': a:testcase,
-        \ 'message': a:message,
-        \ })
 endfunction
 
 let &cpo = s:save_cpo

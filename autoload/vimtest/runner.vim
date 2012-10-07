@@ -5,8 +5,7 @@ set cpo&vim
 
 function! vimtest#runner#new(name)
   let runner = {
-        \ '_name'  : a:name,
-        \ 'assert' : vimtest#assert#new(),
+        \ 'assert' : vimtest#assert#new(a:name),
         \ }
 
   function! runner.startup()
@@ -26,7 +25,7 @@ function! vimtest#runner#new(name)
     try
       call self.startup()
       for func in self._get_testcases()
-        let self.assert._current_testcase = func
+        call self.assert.set_current_testcase(func)
         call self.setup()
         try " エラー時に残りのテストが止まらないようにメソッド呼び出しごとに例外処理する
           call call(self[func], [], self)
@@ -39,24 +38,6 @@ function! vimtest#runner#new(name)
     catch
       call self.assert.error(v:exception, v:throwpoint)
     endtry
-  endfunction
-
-  " TODO test
-  " TODO メッセージの組み立てはここじゃなくね？
-  " memo:なぜassertじゃなくてここで行っているか->ここでしか扱えない情報があったから
-  "  ->self._nameだけ
-  "  メッセージの構築は別のファイルに任せて、ここは情報を整理するだけにとどめる
-  function! runner._result()
-    let failed_messages = []
-    if !empty(self.assert._failed)
-      call add(failed_messages, printf("\n# %s", self._name))
-      for i in range(len(self.assert._failed))
-        let f = self.assert._failed[i]
-        call add(failed_messages, printf(" %d) '%s' is FAILED", i+1, f.testcase))
-        call add(failed_messages, printf("  %s\n", f.message))
-      endfor
-    endif
-    return join(failed_messages, "\n")
   endfunction
 
   function! runner._get_testcases()

@@ -1,6 +1,4 @@
-" FILE: vimtest.vim
 " AUTHOR: kanno <akapanna@gmail.com>
-" Last Change: 2012 Mar 31
 " License: This file is placed in the public domain.
 let s:save_cpo = &cpo
 set cpo&vim
@@ -27,7 +25,7 @@ function! vimtest#run(path, type)
       for r in s:vimtest.runners
         call r._run()
       endfor
-      call s:vimtest.outputter.out(s:vimtest.runners)
+      call s:vimtest.outputter.out(s:test_results())
     endif
   catch
     echoerr v:exception
@@ -48,6 +46,10 @@ function! s:parse_args(path, type)
   let info.testfile = empty(a:path) ? expand('%') : a:path
   let info.outputter = vimtest#outputter#get(a:type)
   return info
+endfunction
+
+function! s:test_results()
+  return map(s:vimtest.runners, 'v:val.assert.result')
 endfunction
 
 function! s:initialize_instance()

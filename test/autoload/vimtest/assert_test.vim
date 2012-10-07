@@ -1,5 +1,5 @@
 let s:testcase = vimtest#new()
-let s:testcase.target = vimtest#assert#new()
+let s:testcase.target = vimtest#assert#new('name')
 
 function! s:testcase._simple_assert(expected, actual)
   if a:expected ==# a:actual

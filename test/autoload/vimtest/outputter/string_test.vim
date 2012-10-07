@@ -38,21 +38,19 @@ endfunction
 
 
 function! s:create_count_result(passed, failed)
-  let assert = {
+  return {
         \ '_passed': range(a:passed),
         \ '_failed': range(a:failed),
         \ }
-  return {'assert': assert}
 endfunction
 
 function! s:create_progress_result(progress_chars)
-  let assert = {'_progress': a:progress_chars}
-  return {'assert': assert}
+  return {'_progress': a:progress_chars}
 endfunction
 
 function! s:create_message_result(message)
   let result = {'message': a:message}
-  function! result._result()
+  function! result.failed_summary()
     return self.message
   endfunction
   return result
