@@ -7,7 +7,6 @@ function! vimtest#runner#new(name)
   let runner = {
         \ '_name'  : a:name,
         \ 'assert' : vimtest#assert#new(),
-        \ 'custom' : {},
         \ }
 
   function! runner.startup()
