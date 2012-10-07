@@ -12,6 +12,7 @@ Author: kanno <akapanna@gmail.com>
 テンプレートメソッド				|vimtest-template-method|
 アサーション					|vimtest-assert|
 カスタムプロパティ				|vimtest-custom|
+命名規則					|vimtest-name-rule|
 コマンド					|vimtest-command|
 サンプル					|vimtest-example|
 更新履歴					|vimtest-changelog|
@@ -342,6 +343,28 @@ xUnitテストフレームにおける、テストクラス内での変数やヘ
 	  for arg in self._.data_provider()
 	    call self.assert.equals(self._.expected, SomeFunction(arg))
 	  endfor
+	endfunction
+<
+
+
+==============================================================================
+命名規則					*vimtest-name-rule*
+
+テストケースに追加定義する変数名として、以下の名前を使うことは出来ません。
+	- _name
+	- assert
+
+
+また、テストメソッド名を"_"から始めるとそのテストは実行されません。
+テストケースに辞書関数を追加したいが、テストとして実行させたくない時にこのルー
+ルを利用できます。
+>
+	let s:testcase = vimtest#new()
+	function! s:testcase._not_test()
+	  " do something
+	endfunction
+	function! s:testcase.test()
+	  " do test
 	endfunction
 <
 
