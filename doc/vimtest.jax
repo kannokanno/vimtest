@@ -414,8 +414,15 @@ vimtest/sampleにいくつかのサンプルがあります。参考にしてく
 更新履歴					*vimtest-changelog*
 
 0.0.2	2012-10-06
+	- 実行コマンド(:VimTest/:VimTestBuffer/:VimTestStdout)の追加
+	- 出力結果のフォーマットを変更
+	- notEquals -> not_equalsにリネーム
 	- 日本語helpの追加
-	- いくつかのバグを修正
+	- vimtest/sampleを更新
+	- vimtest/testを追加
+	- READMEの内容を更新
+	- 多くのリファクタを実施
+	- 多くのバグを修正
 
 0.0.1	2012-03-31
 	- 初版
