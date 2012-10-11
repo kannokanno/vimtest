@@ -6,7 +6,7 @@ function! s:testcase.setup()
 endfunction
 
 function! s:testcase.get_name()
-  call self.assert.equals(self.name, self.target._name)
+  call self.assert.equals(self.name, self.target._runner_name)
 endfunction
 
 function! s:testcase.add_passed_when_success()
