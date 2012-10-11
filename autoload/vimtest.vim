@@ -11,15 +11,7 @@ endfunction
 function! vimtest#run(path, type)
   try
     call extend(s:vimtest, s:parse_args(a:path, a:type))
-    if isdirectory(s:vimtest.testfile)
-      " TODO v0.0.3 feature
-      echohl ErrorMsg | echo 'ディレクトリを指定しての実行は未実装です' | echohl None
-      call vimtest#reset()
-      return
-    endif
-
-    " TODO どんなソースもsourceしちゃう:命名規則に沿ったファイルに絞ってsource
-    silent! execute ':source ' . s:vimtest.testfile
+    call s:source(s:vimtest.testfile)
     if !empty(s:vimtest.runners)
       call s:vimtest.outputter.init()
       for r in s:vimtest.runners
@@ -39,6 +31,17 @@ function! vimtest#new(...)
   let runner = vimtest#runner#new(runner_name)
   call add(s:vimtest.runners, runner)
   return runner
+endfunction
+
+" TODO どんなソースもsourceしちゃう:命名規則に沿ったファイルに絞ってsource
+function! s:source(testpath)
+  if isdirectory(a:testpath)
+    for file in split(globpath(a:testpath, "**/*_test.vim"), "\n")
+      silent! execute ':source ' . file
+    endfor
+  else
+    silent! execute ':source ' . a:testpath
+  endif
 endfunction
 
 function! s:parse_args(path, type)
