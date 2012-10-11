@@ -5,6 +5,7 @@ set cpo&vim
 
 function! vimtest#result#new(name)
   let result = {
+        \ '_filepath'         : expand('%:p'),
         \ '_name'             : a:name,
         \ '_progress'         : [],
         \ '_passed'           : [],
@@ -32,7 +33,7 @@ function! vimtest#result#new(name)
   function! result.failed_summary()
     let failed_messages = []
     if !empty(self._failed)
-      call add(failed_messages, printf("\n# %s", self._name))
+      call add(failed_messages, printf("\n# %s (in %s)", self._name, self._filepath))
       for i in range(len(self._failed))
         let f = self._failed[i]
         call add(failed_messages, printf(" %d) '%s' is FAILED", i+1, f.testcase))
