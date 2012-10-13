@@ -11,6 +11,7 @@ endfunction
 function! s:testcase.config_default()
   let g:vimtest_config = {}
   let actual = vimtest#config#get()
+  call self.assert.equals('buffer', actual.outputter)
   call self.assert.equals([], actual.autotest_watch_patterns)
   call self.assert.equals('', actual.autotest_testpath)
   call self.assert.equals(1, actual.show_summary_cmdline)

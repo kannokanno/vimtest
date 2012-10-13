@@ -19,3 +19,14 @@ function! vimtest#util#autocmd_str(event, cmdarg)
   endif
   return printf('autocmd BufWritePost %s VimTest %s', a:event, a:cmdarg)
 endfunction
+
+function! vimtest#util#augroup()
+  let config = vimtest#config#get()
+  augroup __VimTest__
+    autocmd!
+    for pattern in config.autotest_watch_patterns
+      execute vimtest#util#autocmd_str(pattern, config.autotest_testpath)
+    endfor
+  augroup END
+endfunction
+
