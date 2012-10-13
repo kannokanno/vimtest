@@ -15,7 +15,7 @@ command! -nargs=? -complete=file VimTestBuffer call vimtest#run(<q-args>, 'buffe
 command! -nargs=? -complete=file VimTestStdout call vimtest#run(<q-args>, 'stdout')
 
 let s:config = vimtest#config#get()
-augroup VimTest
+augroup __VimTest__
   autocmd!
   for pattern in s:config.autotest_watch_patterns
     execute vimtest#util#autocmd_str(pattern, s:config.autotest_testpath)
