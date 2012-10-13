@@ -24,6 +24,7 @@ function! s:testcase._not_same_values()
   return [
           \[1, 0],
           \['a', 0],
+          \['', []],
           \['a', 'A'],
           \['a', 'b'],
           \[[], [1]],

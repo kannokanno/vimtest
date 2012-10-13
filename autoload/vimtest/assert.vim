@@ -22,8 +22,7 @@ function! vimtest#assert#new(name)
     let actual = a:2
 
     try
-      if (empty(expected) && empty(actual))
-            \ || ((type(expected) ==# type(actual)) && (expected ==# actual))
+      if (type(expected) ==# type(actual)) && (expected ==# actual)
         return self.success()
       else
         return self.fail(vimtest#message#failure_assert(expected, actual))
@@ -42,8 +41,7 @@ function! vimtest#assert#new(name)
     let actual = a:2
 
     try
-      if (empty(expected) && empty(actual))
-            \ || ((type(expected) ==# type(actual)) && (expected ==# actual))
+      if (type(expected) ==# type(actual)) && (expected ==# actual)
         return self.fail(vimtest#message#failure_assert_not(expected, actual))
       else
         return self.success()
