@@ -15,7 +15,9 @@ command! -nargs=? -complete=file VimTestBuffer call vimtest#run(<q-args>, 'buffe
 command! -nargs=? -complete=file VimTestStdout call vimtest#run(<q-args>, 'stdout')
 command! -nargs=? -complete=file VimTestQuickfix call vimtest#run(<q-args>, 'quickfix')
 
-call vimtest#util#augroup()
+command! -nargs=0 VimTestResettings call vimtest#util#settings()
+
+call vimtest#util#settings()
 
 "let &cpo = s:save_cpo
 "unlet s:save_cpo

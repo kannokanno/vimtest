@@ -30,3 +30,7 @@ function! vimtest#util#augroup()
   augroup END
 endfunction
 
+function! vimtest#util#settings()
+  call vimtest#util#augroup()
+endfunction
+
