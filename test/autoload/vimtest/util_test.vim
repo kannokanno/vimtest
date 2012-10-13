@@ -1,4 +1,5 @@
 let s:testcase = vimtest#new()
+
 function! s:testcase.to_string()
   call self.assert.equals(string(10), vimtest#util#to_string(10))
   call self.assert.equals('hoge', vimtest#util#to_string('hoge'))
@@ -17,4 +18,15 @@ function! s:testcase.to_product_codepath_no_changes()
   call self.assert.equals('', vimtest#util#to_product_codepath(''))
   call self.assert.equals('~/.vim/bundle/vimtest/autoload/vimtest.vim',
         \ vimtest#util#to_product_codepath('~/.vim/bundle/vimtest/autoload/vimtest.vim'))
+endfunction
+
+function! s:testcase.autocmd_str_return_empty_when_invalid_args()
+  call self.assert.equals('', vimtest#util#autocmd_str('', ''))
+endfunction
+
+function! s:testcase.autocmd_str()
+  let event = 'event'
+  let filepath = 'filepath'
+  let expected = printf('autocmd BufWritePost %s VimTest %s', event, filepath)
+  call self.assert.equals(expected, vimtest#util#autocmd_str(event, filepath))
 endfunction

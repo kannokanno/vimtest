@@ -12,3 +12,10 @@ function! vimtest#util#to_product_codepath(testpath)
   let path = substitute(path, '/test/', '/', '')
   return substitute(path, '_test.vim', '.vim', '')
 endfunction
+
+function! vimtest#util#autocmd_str(event, cmdarg)
+  if empty(a:event) || empty(a:cmdarg)
+    return ''
+  endif
+  return printf('autocmd BufWritePost %s VimTest %s', a:event, a:cmdarg)
+endfunction
