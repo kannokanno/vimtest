@@ -13,6 +13,8 @@ function! s:testcase.config_default()
   let actual = vimtest#config#get()
   call self.assert.equals([], actual.autotest_watch_patterns)
   call self.assert.equals('', actual.autotest_testpath)
+  call self.assert.equals(1, actual.show_summary_cmdline)
+  call self.assert.equals(0, actual.show_only_test_fail)
 endfunction
 
 function! s:testcase.config_setting()

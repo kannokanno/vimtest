@@ -10,6 +10,7 @@ endfunction
 
 function! vimtest#run(path, type)
   try
+    let config = vimtest#config#get()
     call extend(s:vimtest, s:parse_args(a:path, a:type))
     call s:source(s:vimtest.testfile)
     if !empty(s:vimtest.runners)
@@ -17,7 +18,19 @@ function! vimtest#run(path, type)
       for r in s:vimtest.runners
         call r._run()
       endfor
-      call s:vimtest.outputter.out(s:test_results())
+      let results = s:test_results()
+
+      " TODO 処理移動 & test
+      if config.show_only_test_fail
+            \ && empty(filter(copy(results), '!empty(v:val._failed)'))
+        " do nothing
+      else
+        call s:vimtest.outputter.out(results)
+      endif
+
+      if config.show_summary_cmdline
+        echo s:vimtest.outputter.online_summary(results)
+      endif
     endif
   catch
     echoerr v:exception
