@@ -13,6 +13,7 @@ set cpo&vim
 command! -nargs=? -complete=file VimTest call vimtest#run(<q-args>, 'buffer')
 command! -nargs=? -complete=file VimTestBuffer call vimtest#run(<q-args>, 'buffer')
 command! -nargs=? -complete=file VimTestStdout call vimtest#run(<q-args>, 'stdout')
+command! -nargs=? -complete=file VimTestQuickfix call vimtest#run(<q-args>, 'quickfix')
 
 let s:config = vimtest#config#get()
 augroup __VimTest__

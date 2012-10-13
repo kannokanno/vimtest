@@ -1,7 +1,7 @@
 let s:testcase = vimtest#new()
 
 function! s:testcase._outtpuer_typenames()
-  return ['buffer', 'stdout']
+  return ['buffer', 'stdout', 'quickfix']
 endfunction
 
 function! s:testcase.get_outputter_default_is_buffer()

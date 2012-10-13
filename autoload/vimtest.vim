@@ -21,7 +21,8 @@ function! vimtest#run(path, type)
       let results = s:test_results()
 
       " TODO 処理移動 & test
-      if config.show_only_test_fail
+      if s:vimtest.outputter._name !=# 'quickfix'
+            \ && config.show_only_test_fail
             \ && empty(filter(copy(results), '!empty(v:val._failed)'))
         " do nothing
       else

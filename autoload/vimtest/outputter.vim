@@ -55,6 +55,8 @@ function! vimtest#outputter#get(type)
     return vimtest#outputter#buffer#new()
   elseif a:type ==? 'stdout'
     return vimtest#outputter#stdout#new()
+  elseif a:type ==? 'quickfix'
+    return vimtest#outputter#quickfix#new()
   else
     return vimtest#outputter#buffer#new()
   endif
