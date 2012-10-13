@@ -5,3 +5,16 @@ function! s:testcase.to_string()
   call self.assert.equals(string([1,2,'a']), vimtest#util#to_string([1,2,'a']))
   call self.assert.equals(string({'a':1, 2:'b'}), vimtest#util#to_string({'a':1, 2:'b'}))
 endfunction
+
+function! s:testcase.to_product_codepath_is_success()
+  call self.assert.equals('~/.vim/bundle/vimtest/autoload/vimtest/runner.vim',
+        \ vimtest#util#to_product_codepath('~/.vim/bundle/vimtest/test/autoload/vimtest/runner_test.vim'))
+  call self.assert.equals('~/.vim/bundle/vimtest/autoload/vimtest.vim',
+        \ vimtest#util#to_product_codepath('~/.vim/bundle/vimtest/test/autoload/vimtest_test.vim'))
+endfunction
+
+function! s:testcase.to_product_codepath_no_changes()
+  call self.assert.equals('', vimtest#util#to_product_codepath(''))
+  call self.assert.equals('~/.vim/bundle/vimtest/autoload/vimtest.vim',
+        \ vimtest#util#to_product_codepath('~/.vim/bundle/vimtest/autoload/vimtest.vim'))
+endfunction

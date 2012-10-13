@@ -33,13 +33,16 @@ function! vimtest#new(...)
   return runner
 endfunction
 
-" TODO どんなソースもsourceしちゃう:命名規則に沿ったファイルに絞ってsource
 function! s:source(testpath)
   if isdirectory(a:testpath)
     for file in split(globpath(a:testpath, "**/*_test.vim"), "\n")
-      silent! execute ':source ' . file
+      call s:source(file)
     endfor
   else
+    let product_codepath = vimtest#util#to_product_codepath(a:testpath)
+    if !empty(product_codepath)
+      silent! execute ':source ' . product_codepath
+    endif
     silent! execute ':source ' . a:testpath
   endif
 endfunction
