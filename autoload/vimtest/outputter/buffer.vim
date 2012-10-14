@@ -23,12 +23,12 @@ function! s:outputter.out(results)
     silent % delete _
   endif
 
-  call self.output(a:runners)
+  call self.output(a:results)
 
   execute winnr 'wincmd w'
 endfunction
 
-function! s:outputter.output(runners)
+function! s:outputter.output(results)
   let str = vimtest#outputter#string#new()
   let data = str.out(a:results)
   silent $ put = data
