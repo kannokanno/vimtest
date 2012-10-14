@@ -34,7 +34,9 @@ function! vimtest#run(path, type)
 endfunction
 
 function! vimtest#new(...)
-  let runner_name = len(a:000) > 0 && !empty(a:1) ? a:1 : 'No Name Test'
+  let runner_name = len(a:000) > 0 && !empty(a:1) 
+        \ ? a:1
+        \ : fnamemodify(s:vimtest.current_source_testpath, ':t')
   let runner = vimtest#runner#new(runner_name)
   " NOTE: テスト失敗時に対象ファイル名を表示するために必要
   let runner.assert.result._filepath = s:vimtest.current_source_testpath
