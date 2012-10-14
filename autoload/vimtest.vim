@@ -34,8 +34,10 @@ function! vimtest#run(path, type)
 endfunction
 
 function! vimtest#new(...)
-  let runner_name = len(a:000) > 0 && !empty(a:1) ? a:1 : expand('%:t')
+  let runner_name = len(a:000) > 0 && !empty(a:1) ? a:1 : 'No Name Test'
   let runner = vimtest#runner#new(runner_name)
+  " NOTE: テスト失敗時に対象ファイル名を表示するために必要
+  let runner.assert.result._filepath = s:vimtest.current_source_testpath
   call add(s:vimtest.runners, runner)
   return runner
 endfunction
@@ -50,7 +52,11 @@ function! s:source(testpath)
     if !empty(product_codepath)
       silent! execute ':source ' . product_codepath
     endif
+
+    " NOTE: 出力情報のためセットする。この値はvimtest#new()で使用される
+    let s:vimtest.current_source_testpath = a:testpath
     silent! execute ':source ' . a:testpath
+    let s:vimtest.current_source_testpath = ''
   endif
 endfunction
 
@@ -70,6 +76,7 @@ function! s:initialize_instance()
         \ 'runners'   : [],
         \ 'outputter' : '',
         \ 'testfile'  : '',
+        \ 'current_source_testpath'  : '',
         \ }
 endfunction
 
