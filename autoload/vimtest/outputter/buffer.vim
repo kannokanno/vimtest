@@ -16,7 +16,7 @@ function! s:outputter.init()
   let self.config.split = winwidth(0) * 2 < winheight(0) * 5 ? "split" : "vertical split"
 endfunction
 
-function! s:outputter.out(runners)
+function! s:outputter.out(results)
   let winnr = winnr()
   call s:open_result_window(self.config)
   if !self._append
@@ -30,7 +30,7 @@ endfunction
 
 function! s:outputter.output(runners)
   let str = vimtest#outputter#string#new()
-  let data = str.out(a:runners)
+  let data = str.out(a:results)
   silent $ put = data
 endfunction
 

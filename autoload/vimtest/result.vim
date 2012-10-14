@@ -6,7 +6,7 @@ set cpo&vim
 function! vimtest#result#new(name)
   let result = {
         \ '_filepath'         : expand('%:p'),
-        \ '_runner_name'             : a:name,
+        \ '_runner_name'      : a:name,
         \ '_progress'         : [],
         \ '_passed'           : [],
         \ '_failed'           : [],
