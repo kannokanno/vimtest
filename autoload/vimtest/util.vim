@@ -10,7 +10,8 @@ function! vimtest#util#to_product_codepath(testpath)
   let path = a:testpath
   " TODO /プラグイン名/test/ => /pluginname/
   let path = substitute(path, '/test/', '/', '')
-  return substitute(path, '_test.vim', '.vim', '')
+  let product_path = substitute(path, '_test.vim', '.vim', '')
+  return path ==# product_path ? '' : product_path
 endfunction
 
 function! vimtest#util#autocmd_str(event, cmdarg)

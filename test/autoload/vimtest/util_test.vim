@@ -14,10 +14,10 @@ function! s:testcase.to_product_codepath_is_success()
         \ vimtest#util#to_product_codepath('~/.vim/bundle/vimtest/test/autoload/vimtest_test.vim'))
 endfunction
 
-function! s:testcase.to_product_codepath_no_changes()
+function! s:testcase.to_product_codepath_is_empty_when_not_exists()
   call self.assert.equals('', vimtest#util#to_product_codepath(''))
-  call self.assert.equals('~/.vim/bundle/vimtest/autoload/vimtest.vim',
-        \ vimtest#util#to_product_codepath('~/.vim/bundle/vimtest/autoload/vimtest.vim'))
+  call self.assert.equals('',
+        \ vimtest#util#to_product_codepath('~/.vim/bundle/vimtest/sample/usage_sample.vim'))
 endfunction
 
 function! s:testcase.autocmd_str_return_empty_when_invalid_args()
