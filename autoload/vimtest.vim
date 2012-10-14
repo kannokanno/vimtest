@@ -20,14 +20,7 @@ function! vimtest#run(path, type)
       endfor
       let results = s:test_results()
 
-      " TODO 処理移動 & test
-      if s:vimtest.outputter._name !=# 'quickfix'
-            \ && config.show_only_test_fail
-            \ && empty(filter(copy(results), '!empty(v:val._failed)'))
-        " do nothing
-      else
-        call s:vimtest.outputter.out(results)
-      endif
+      call s:vimtest.outputter.out(results)
 
       if config.show_summary_cmdline
         echo s:vimtest.outputter.online_summary(results)
