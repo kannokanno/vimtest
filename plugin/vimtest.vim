@@ -19,5 +19,5 @@ command! -nargs=0 VimTestResettings call vimtest#util#settings()
 
 call vimtest#util#settings()
 
-"let &cpo = s:save_cpo
-"unlet s:save_cpo
+let &cpo = s:save_cpo
+unlet s:save_cpo
