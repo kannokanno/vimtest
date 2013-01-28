@@ -30,11 +30,8 @@ syntax match VimTestStatusFailure '\w*' contained
 syntax match VimTestFailureDetail "^\s*\d\+) '\w\+' is FAILED"
 
 " summary result
-syntax match VimTestResult
-      \ '^Test cases run: \d\+, Passes: \d\+, Failures: \d\+'
-      \ contains=VimTestAllSuccess,VimTestSomeFailures
-syntax match VimTestAllSuccess 'Failures: 0' contained
-syntax match VimTestSomeFailures 'Failures: [1-9]\d*'   contained
+syntax match VimTestAllSuccess '^Test cases run: \d\+, Passes: \d\+, Failures: 0'
+syntax match VimTestSomeFailures '^Test cases run: \d\+, Passes: \d\+, Failures: [1-9]\d*'
 
 " success highlight
 highlight default link VimTestStatusSuccess  VimTestSuccess
