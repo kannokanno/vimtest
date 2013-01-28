@@ -5,5 +5,6 @@ function! vimtest#config#get()
         \ 'autotest_testpath': '',
         \ 'show_summary_cmdline': 1,
         \ }
-  return extend(default, g:vimtest_config)
+  let override_config = exists('g:vimtest_config') ? g:vimtest_config : {}
+  return extend(default, override_config)
 endfunction
