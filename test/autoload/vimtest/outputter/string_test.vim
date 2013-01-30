@@ -2,12 +2,13 @@ let s:testcase = vimtest#new()
 let s:testcase.target = vimtest#outputter#string#new()
 
 function! s:testcase.create_progress_message()
+  let marks = ['.','F','F','.']
   let results = [
-        \ s:create_progress_result(['.','F','F','.']),
+        \ s:create_progress_result(marks),
         \]
 
   call self.assert.equals(
-        \ '.FF.',
+        \ join(marks, "\n"),
         \ self.target.create_progress_message(results))
 endfunction
 

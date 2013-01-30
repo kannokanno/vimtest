@@ -15,19 +15,19 @@ function! vimtest#result#new(name)
 
   function! result.success()
     call insert(self._passed, {})
-    call add(self._progress, '.')
+    call add(self._progress, s:progress_line('x', self._current_testcase))
   endfunction
 
   function! result.fail(...)
     let message = len(a:000) > 0 ? a:1 : 'called result.fail()'
     call s:insert(self._failed, self._current_testcase, message)
-    call add(self._progress, 'F')
+    call add(self._progress, s:progress_line(' ', self._current_testcase))
   endfunction
 
   function! result.error(exception, throwpoint)
     let message = vimtest#message#exception(a:exception, a:throwpoint)
     call s:insert(self._failed, self._current_testcase, message)
-    call add(self._progress, 'E')
+    call add(self._progress, s:progress_line(' ', self._current_testcase))
   endfunction
 
   function! result.failed_summary()
@@ -44,6 +44,10 @@ function! vimtest#result#new(name)
   endfunction
 
   return result
+endfunction
+
+function! s:progress_line(mark, name)
+  return printf(' [%s] %s', a:mark, a:name)
 endfunction
 
 function! s:insert(list, testcase, message)

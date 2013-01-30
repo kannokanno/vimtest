@@ -13,9 +13,7 @@ function! vimtest#outputter#instance(name)
   function! s:outputter.create_progress_message(results)
     let message = ''
     for r in a:results
-      for p in r._progress
-        let message .= p
-      endfor
+      let message .= join(r._progress, "\n")
     endfor
     return message
   endfunction
