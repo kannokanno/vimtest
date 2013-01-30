@@ -8,7 +8,9 @@ let s:outputter = vimtest#outputter#instance('string')
 function! s:outputter.out(results)
   let message  = ''
   let message .= self.create_progress_message(a:results)
+  let message .= "\n"
   let message .= self.create_failed_message(a:results)
+  let message .= "\n"
   let message .= self.create_summary_message(a:results)
   return message
 endfunction

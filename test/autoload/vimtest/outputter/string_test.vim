@@ -2,13 +2,11 @@ let s:testcase = vimtest#new()
 let s:testcase.target = vimtest#outputter#string#new()
 
 function! s:testcase.create_progress_message()
-  let marks = ['.','F','F','.']
-  let results = [
-        \ s:create_progress_result(marks),
-        \]
+  let marks = {'test1':1, 'test2':0, 'test3':0, 'test4':1}
+  let results = [s:create_progress_result(marks)]
 
   call self.assert.equals(
-        \ join(marks, "\n"),
+        \ join(values(map(copy(marks), "vimtest#message#progress_line(v:val, v:key)")), "\n"),
         \ self.target.create_progress_message(results))
 endfunction
 
@@ -45,8 +43,8 @@ function! s:create_count_result(passed, failed)
         \ }
 endfunction
 
-function! s:create_progress_result(progress_chars)
-  return {'_progress': a:progress_chars}
+function! s:create_progress_result(progress_state)
+  return {'_progress': a:progress_state}
 endfunction
 
 function! s:create_message_result(message)

@@ -45,6 +45,12 @@ function! vimtest#message#invalid_bool_arg(value)
   return printf('Invalid arg<%s> type %s. valid type is string or num', string(a:value), type)
 endfunction
 
+" TODO test
+function! vimtest#message#progress_line(status, testcase)
+  let mark = a:status == 1 ? 'x' : ' '
+  return printf(' [%s] %s', mark, a:testcase)
+endfunction
+
 function! s:assert_failure_format(expected, actual)
   let pattern  = "Failed asserting that two values are equal"
   let pattern .= "\n"
