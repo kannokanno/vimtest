@@ -9,7 +9,7 @@ function! s:testcase.teardown()
 endfunction
 
 function! s:testcase.config_default_when_null()
-  unlet g:vimtest_config
+  unlet! g:vimtest_config
   let actual = vimtest#config#get()
   call self.assert.equals('buffer', actual.outputter)
   call self.assert.equals([], actual.autotest_watch_patterns)
