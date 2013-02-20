@@ -5,10 +5,11 @@ let s:testcase = vimtest#new()
 " +   actual:2
 
 function! s:testcase.summary()
-  call self.assert.equals("Test cases run: 10, Passes: 8, Failures: 2\n", vimtest#message#summary(8, 2))
-  call self.assert.equals("Test cases run: 3, Passes: 0, Failures: 3\n", vimtest#message#summary(0, 3))
-  call self.assert.equals("Test cases run: 2, Passes: 2, Failures: 0\n", vimtest#message#summary(2, 0))
-  call self.assert.equals("Test cases run: 0, Passes: 0, Failures: 0\n", vimtest#message#summary(0, 0))
+  let template = "Test cases run: %d, Assertions: %d, Passes: %d, Failures: %d\n"
+  call self.assert.equals(printf(template, 6, 10, 8, 2), vimtest#message#summary(6, 8, 2))
+  call self.assert.equals(printf(template, 2, 3, 0, 3), vimtest#message#summary(2, 0, 3))
+  call self.assert.equals(printf(template, 1, 2, 2, 0), vimtest#message#summary(1, 2, 0))
+  call self.assert.equals(printf(template, 0, 0, 0, 0), vimtest#message#summary(0, 0, 0))
 endfunction
 
 function! s:testcase.failure_assert()

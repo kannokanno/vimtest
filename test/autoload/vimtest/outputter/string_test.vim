@@ -32,18 +32,19 @@ endfunction
 
 function! s:testcase.create_summary_message()
   let results = [
-        \ s:create_count_result(3, 2),
-        \ s:create_count_result(2, 1)
+        \ s:create_count_result(2, 3, 2),
+        \ s:create_count_result(1, 2, 1)
         \]
 
   call self.assert.equals(
-        \ vimtest#message#summary(5, 3),
+        \ vimtest#message#summary(3, 5, 3),
         \ self.target.create_summary_message(results))
 endfunction
 
 
-function! s:create_count_result(passed, failed)
+function! s:create_count_result(progress, passed, failed)
   return {
+        \ '_progress': range(a:progress),
         \ '_passed': range(a:passed),
         \ '_failed': range(a:failed),
         \ }

@@ -35,13 +35,15 @@ function! vimtest#outputter#instance(name)
 
   " TODO messageの組み立てはこのファイルの責務じゃない
   function! s:outputter.create_summary_message(results)
+    let total_test_count   = 0
     let total_passed_count = 0
     let total_failed_count = 0
     for r in a:results
+      let total_test_count   += len(r._progress)
       let total_passed_count += len(r._passed)
       let total_failed_count += len(r._failed)
     endfor
-    return vimtest#message#summary(total_passed_count, total_failed_count)
+    return vimtest#message#summary(total_test_count, total_passed_count, total_failed_count)
   endfunction
 
   function! s:outputter.online_summary(results)
