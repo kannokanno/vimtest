@@ -4,7 +4,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! vimtest#message#summary(passed_count, failed_count)
-  return printf("\nTest cases run: %d, Passes: %d, Failures: %d\n",
+  return printf("Test cases run: %d, Passes: %d, Failures: %d\n",
         \ a:passed_count + a:failed_count,
         \ a:passed_count,
         \ a:failed_count,

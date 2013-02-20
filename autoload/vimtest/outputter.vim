@@ -13,9 +13,11 @@ function! vimtest#outputter#instance(name)
   function! s:outputter.create_progress_message(results)
     let lines = []
     for r in a:results
+      call add(lines, r._runner_name)
       for testcase in keys(r._progress)
         call add(lines, vimtest#message#progress_line(r._progress[testcase], testcase))
       endfor
+      call add(lines, '')
     endfor
     return join(lines, "\n")
   endfunction
