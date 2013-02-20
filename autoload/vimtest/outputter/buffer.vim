@@ -24,6 +24,8 @@ function! s:outputter.out(results)
   endif
 
   call self.output(a:results)
+  normal! G
+  redraw
 
   execute winnr 'wincmd w'
 endfunction
