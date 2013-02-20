@@ -7,7 +7,7 @@ function! vimtest#result#new(name)
   let result = {
         \ '_filepath'         : '',
         \ '_runner_name'      : a:name,
-        \ '_progress'         : [],
+        \ '_progress'         : {},
         \ '_passed'           : [],
         \ '_failed'           : [],
         \ '_current_testcase' : '',
@@ -15,19 +15,19 @@ function! vimtest#result#new(name)
 
   function! result.success()
     call insert(self._passed, {})
-    call add(self._progress, '.')
+    call self.update_progress_status(1, self._current_testcase)
   endfunction
 
   function! result.fail(...)
     let message = len(a:000) > 0 ? a:1 : 'called result.fail()'
     call s:insert(self._failed, self._current_testcase, message)
-    call add(self._progress, 'F')
+    call self.update_progress_status(0, self._current_testcase)
   endfunction
 
   function! result.error(exception, throwpoint)
     let message = vimtest#message#exception(a:exception, a:throwpoint)
     call s:insert(self._failed, self._current_testcase, message)
-    call add(self._progress, 'E')
+    call self.update_progress_status(0, self._current_testcase)
   endfunction
 
   function! result.failed_summary()
@@ -43,7 +43,29 @@ function! vimtest#result#new(name)
     return join(failed_messages, "\n")
   endfunction
 
+  " TODO dict関数にしたくない
+  " TODO 汚い
+  function! result.update_progress_status(status, testcase)
+    if empty(a:testcase)
+      return
+    endif
+    " NOTE: _progress = {testcase: status(bool)}
+    if has_key(self._progress, a:testcase)
+      if self._progress[a:testcase] ==# 1 && a:status ==# 0
+        " update fail status
+        let self._progress[a:testcase] = 0
+      endif
+    else
+      let self._progress[a:testcase] = a:status
+    endif
+    return self._progress[a:testcase]
+  endfunction
+
   return result
+endfunction
+
+function! s:progress_line(mark, name)
+  return printf(' [%s] %s', a:mark, a:name)
 endfunction
 
 function! s:insert(list, testcase, message)

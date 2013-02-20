@@ -11,13 +11,15 @@ function! vimtest#outputter#instance(name)
 
   " TODO messageの組み立てはこのファイルの責務じゃない
   function! s:outputter.create_progress_message(results)
-    let message = ''
+    let lines = []
     for r in a:results
-      for p in r._progress
-        let message .= p
+      call add(lines, r._runner_name)
+      for testcase in keys(r._progress)
+        call add(lines, vimtest#message#progress_line(r._progress[testcase], testcase))
       endfor
+      call add(lines, '')
     endfor
-    return message
+    return join(lines, "\n")
   endfunction
 
   " TODO messageの組み立てはこのファイルの責務じゃない

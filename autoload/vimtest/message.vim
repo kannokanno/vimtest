@@ -4,7 +4,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! vimtest#message#summary(passed_count, failed_count)
-  return printf("\n\nTest cases run: %d, Passes: %d, Failures: %d\n",
+  return printf("Test cases run: %d, Passes: %d, Failures: %d\n",
         \ a:passed_count + a:failed_count,
         \ a:passed_count,
         \ a:failed_count,
@@ -43,6 +43,12 @@ function! vimtest#message#invalid_bool_arg(value)
     let type = 'dict'
   endif
   return printf('Invalid arg<%s> type %s. valid type is string or num', string(a:value), type)
+endfunction
+
+" TODO test
+function! vimtest#message#progress_line(status, testcase)
+  let mark = a:status == 1 ? 'x' : ' '
+  return printf(' [%s] %s', mark, a:testcase)
 endfunction
 
 function! s:assert_failure_format(expected, actual)
