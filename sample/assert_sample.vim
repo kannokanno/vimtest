@@ -29,3 +29,13 @@ function! s:testcase.false()
   call self.assert.false('a1')
   call self.assert.false(empty([1]))
 endfunction
+
+function! s:testcase.exception()
+  call self.assert.throw('E492')
+  hoge
+endfunction
+
+function! s:testcase.exception_message()
+  call self.assert.throw('something wrong')
+  throw 'something wrong'
+endfunction

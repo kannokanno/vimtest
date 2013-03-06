@@ -30,3 +30,8 @@ function! s:testcase.autocmd_str()
   let expected = printf('autocmd BufWritePost %s VimTest %s', event, filepath)
   call self.assert.equals(expected, vimtest#util#autocmd_str(event, filepath))
 endfunction
+
+function! s:testcase.get_error_id()
+  call self.assert.equals('E492',
+        \ vimtest#util#get_error_id('Vim(echoerr):Vim:E492: Not an editor command:   asdf'))
+endfunction

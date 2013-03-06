@@ -46,6 +46,10 @@ function! vimtest#message#invalid_bool_arg(value)
   return printf('Invalid arg<%s> type %s. valid type is string or num', string(a:value), type)
 endfunction
 
+function! vimtest#message#not_occur(error)
+  return printf('Expected exception %s. but does not occur', a:error)
+endfunction
+
 " TODO test
 function! vimtest#message#progress_line(status, testcase)
   let mark = a:status == 1 ? 'x' : ' '

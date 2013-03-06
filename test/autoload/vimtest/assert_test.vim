@@ -94,3 +94,10 @@ function! s:testcase.false_expected_false()
   endfor
 endfunction
 
+function! s:testcase.expected_throw_value()
+  call self._simple_assert('', self.assert.current_expected_throw)
+  call self.assert.throw('hogehoge')
+  call self._simple_assert('hogehoge', self.assert.current_expected_throw)
+  " 値が残っていると実際に「例外が発生したかどうか」のテストが走ってしまうので消す
+  call self.assert.throw('')
+endfunction

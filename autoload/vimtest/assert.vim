@@ -7,6 +7,7 @@ set cpo&vim
 function! vimtest#assert#new(name)
   let assert = {
         \ 'result' : vimtest#result#new(a:name),
+        \ 'current_expected_throw' : '',
         \ }
 
   function! assert.set_current_testcase(func_name)
@@ -77,6 +78,10 @@ function! vimtest#assert#new(name)
     endif
     let bool = arg ? 1 : 0
     return self.equals(0, bool)
+  endfunction
+
+  function! assert.throw(error)
+    let self.current_expected_throw = a:error
   endfunction
 
   " shortcut

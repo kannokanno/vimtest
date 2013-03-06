@@ -29,9 +29,23 @@ function! vimtest#runner#new(name)
         call self.setup()
         try " エラー時に残りのテストが止まらないようにメソッド呼び出しごとに例外処理する
           call call(self[func], [], self)
-        catch
-          call self.assert.error(v:exception, v:throwpoint)
+        catch /.*/
+          if v:exception =~# 'Vim:E' &&
+                \ vimtest#util#get_error_id(v:exception) ==# self.assert.current_expected_throw
+            call self.assert.success()
+            let self.assert.current_expected_throw = ''
+          elseif v:exception ==# self.assert.current_expected_throw
+            call self.assert.success()
+            let self.assert.current_expected_throw = ''
+          else
+            call self.assert.error(v:exception, v:throwpoint)
+          endif
         endtry
+
+        if !empty(self.assert.current_expected_throw)
+          call self.assert.fail(vimtest#message#not_occur(self.assert.current_expected_throw))
+          let self.assert.current_expected_throw = ''
+        endif
         call self.teardown()
       endfor
       call self.shutdown()

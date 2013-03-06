@@ -37,3 +37,7 @@ endfunction
 function! s:testcase.invalid_bool_arg()
   call self.assert.equals('Invalid arg<[]> type list. valid type is string or num', vimtest#message#invalid_bool_arg([]))
 endfunction
+
+function! s:testcase.not_occur()
+  call self.assert.equals('Expected exception E412. but does not occur', vimtest#message#not_occur('E412'))
+endfunction
