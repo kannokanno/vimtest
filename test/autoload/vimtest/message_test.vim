@@ -27,7 +27,7 @@ endfunction
 " TODO assert_not test
 
 function! s:testcase.exception()
-  call self.assert.equals("Excpetion:error_message\n   in point", vimtest#message#exception('error_message', 'point'))
+  call self.assert.equals("Exception:error_message\n   in point", vimtest#message#exception('error_message', 'point'))
 endfunction
 
 function! s:testcase.not_enough_args()
