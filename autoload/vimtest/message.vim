@@ -25,7 +25,7 @@ function! vimtest#message#failure_assert_not(expected, actual)
 endfunction
 
 function! vimtest#message#exception(message, throwpoint)
-  return printf("Excpetion:%s\n   in %s", a:message, a:throwpoint)
+  return printf("Exception:%s\n   in %s", a:message, a:throwpoint)
 endfunction
 
 function! vimtest#message#not_enough_args(funcname, expected, actual)
