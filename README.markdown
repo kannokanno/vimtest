@@ -17,9 +17,11 @@ xUnitに近い形での記述が出来ます。
 
 ### 実行結果
 
-    .
+    success test
+     [x] sum
 
-    Test cases run: 1, Passes: 1, Failures: 0
+
+    Test cases run: 1, Assertions: 1, Passes: 1, Failures: 0
 
 ### テストコード(失敗例)
 
@@ -30,15 +32,17 @@ xUnitに近い形での記述が出来ます。
 
 ### 実行結果
 
-    F
-    # failure test
+    failure test
+     [ ] sum
+
+
+    # failure test (in .vim/sample.vim)
      1) 'sum' is FAILED
       Failed asserting that two values are equal
        - expected:3
        +   actual:2
 
-
-    Test cases run: 1, Passes: 0, Failures: 1
+    Test cases run: 1, Assertions: 1, Passes: 0, Failures: 1
 
 実行方法
 ========
