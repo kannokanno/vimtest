@@ -12,7 +12,7 @@ function! vimtest#run(path, type)
   try
     let config = vimtest#config#get()
     call extend(s:vimtest, s:parse_args(a:path, a:type))
-    call s:source(s:vimtest.testfile)
+    call s:source(s:vimtest.testfile, config)
     if !empty(s:vimtest.runners)
       call s:vimtest.outputter.init()
       for r in s:vimtest.runners
@@ -44,15 +44,17 @@ function! vimtest#new(...)
   return runner
 endfunction
 
-function! s:source(testpath)
+function! s:source(testpath, config)
   if isdirectory(a:testpath)
     for file in split(globpath(a:testpath, "**/*_test.vim"), "\n")
-      call s:source(file)
+      call s:source(file, a:config)
     endfor
   else
-    let product_codepath = vimtest#util#to_product_codepath(a:testpath)
-    if !empty(product_codepath)
-      silent! execute ':source ' . product_codepath
+    if a:config.auto_source
+      let product_codepath = vimtest#util#to_product_codepath(a:testpath)
+      if !empty(product_codepath)
+        silent! execute ':source ' . product_codepath
+      endif
     endif
 
     " NOTE: 出力情報のためセットする。この値はvimtest#new()で使用される

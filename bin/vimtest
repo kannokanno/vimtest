@@ -1,0 +1,14 @@
+#!/bin/bash
+if [ $# -ne 1 ]; then
+  echo "Usage: vimtest {fiile | directory}" 1>&2
+  exit 1
+fi
+
+TESTPATH=$1
+BIN_DIR=$(cd $(dirname $0); pwd)
+OUTFILE=$BIN_DIR/vimtest_result.txt
+VIMTEST_BIN=$BIN_DIR/bin.vim
+CURRENT_DIR=`pwd`
+
+vim -i NONE -u NONE -U NONE --cmd "let g:vimtest_current_dir='$CURRENT_DIR'" --cmd "let g:vimtest_testpath='$TESTPATH'" --cmd "let g:vimtest_outfile='$OUTFILE'" -S $VIMTEST_BIN -c "qa!"
+cat $OUTFILE

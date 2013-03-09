@@ -15,6 +15,7 @@ function! s:testcase.config_default_when_null()
   call self.assert.equals([], actual.autotest_watch_patterns)
   call self.assert.equals('', actual.autotest_testpath)
   call self.assert.equals(1, actual.show_summary_cmdline)
+  call self.assert.equals(1, actual.auto_source)
 endfunction
 
 function! s:testcase.config_default_when_empty()
@@ -24,6 +25,7 @@ function! s:testcase.config_default_when_empty()
   call self.assert.equals([], actual.autotest_watch_patterns)
   call self.assert.equals('', actual.autotest_testpath)
   call self.assert.equals(1, actual.show_summary_cmdline)
+  call self.assert.equals(1, actual.auto_source)
 endfunction
 
 function! s:testcase.config_setting()
@@ -40,6 +42,7 @@ function! s:testcase.config_setting()
   " default value
   call self.assert.equals('buffer', actual.outputter)
   call self.assert.equals(1, actual.show_summary_cmdline)
+  call self.assert.equals(1, actual.auto_source)
 endfunction
 
 function! s:testcase.config_rewrite()

@@ -21,13 +21,15 @@ function! s:testcase.to_product_codepath_is_empty_when_not_exists()
 endfunction
 
 function! s:testcase.autocmd_str_return_empty_when_invalid_args()
+  call self.assert.equals('', vimtest#util#autocmd_str('', '1'))
+  call self.assert.equals('', vimtest#util#autocmd_str('1', ''))
   call self.assert.equals('', vimtest#util#autocmd_str('', ''))
 endfunction
 
 function! s:testcase.autocmd_str()
   let event = 'event'
   let filepath = 'filepath'
-  let expected = printf('autocmd BufWritePost %s VimTest %s', event, filepath)
+  let expected = printf('autocmd BufWritePost %s call vimtest#config#get().autotest_cmd("%s")', event, filepath)
   call self.assert.equals(expected, vimtest#util#autocmd_str(event, filepath))
 endfunction
 
