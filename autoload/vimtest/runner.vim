@@ -30,7 +30,7 @@ function! vimtest#runner#new(name)
         try " エラー時に残りのテストが止まらないようにメソッド呼び出しごとに例外処理する
           call call(self[func], [], self)
         catch /.*/
-          if v:exception =~# 'Vim:E' &&
+          if v:exception =~# 'Vim' &&
                 \ vimtest#util#get_error_id(v:exception) ==# self.assert.current_expected_throw
             call self.assert.success()
             let self.assert.current_expected_throw = ''

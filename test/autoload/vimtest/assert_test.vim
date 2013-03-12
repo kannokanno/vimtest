@@ -101,3 +101,11 @@ function! s:testcase.expected_throw_value()
   " 値が残っていると実際に「例外が発生したかどうか」のテストが走ってしまうので消す
   call self.assert.throw('')
 endfunction
+
+function! s:testcase.expected_throw()
+  call self._simple_assert('', self.assert.current_expected_throw)
+  call self.assert.throw('E684')
+  let a = remove([], -1)
+  " 上で例外指定しているので通る
+  call self.assert.throw('')
+endfunction
