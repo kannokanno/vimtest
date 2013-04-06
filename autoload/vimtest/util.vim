@@ -31,7 +31,7 @@ function! vimtest#util#augroup()
 endfunction
 
 function! vimtest#util#get_error_id(message)
-  return matchstr(a:message, 'Vim:\zsE\d*\ze:')
+  return matchstr(a:message, 'Vim\%((\a\+)\)\=:\zsE\d*\ze:')
 endfunction
 
 function! vimtest#util#settings()
