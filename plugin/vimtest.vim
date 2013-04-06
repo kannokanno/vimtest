@@ -25,9 +25,6 @@ function! VimTestRunTerminal(path, outfile)
     let &verbosefile = a:outfile
     silent! call vimtest#run(expand(a:path), 'stdout')
   finally
-    " TODO あとで消す
-    echo strftime("%Y/%m/%d (%a) %H:%M:%S")
-    echo "\r\r"
     if &verbosefile ==# a:outfile
       let &verbosefile = save_vfile
     endif
