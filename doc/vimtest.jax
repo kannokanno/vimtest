@@ -20,6 +20,7 @@ Author: kanno <akapanna@gmail.com>
 コマンドライン実行				|vimtest-command-line|
 コマンドライン実行の設定			|vimtest-command-line-settings|
 サンプル					|vimtest-example|
+FAQ					|vimtest-faq|
 更新履歴					|vimtest-changelog|
 
 
@@ -289,12 +290,12 @@ assert.equals(expected, actual)			*vimtest-assert-equals*
 >
 	let s:testcase = vimtest#new('assert example')
 	function! s:testcase.equals_success()
-	    call self.assert.equals(1, 1)
-	    call self.assert.equals('a', 'a')
-	    call self.assert.equals([], [])
-	    call self.assert.equals([1], [1])
-	    call self.assert.equals(['a'], ['a'])
-	    call self.assert.equals({'a':1, 'b':2}, {'a':1, 'b':2})
+	  call self.assert.equals(1, 1)
+	  call self.assert.equals('a', 'a')
+	  call self.assert.equals([], [])
+	  call self.assert.equals([1], [1])
+	  call self.assert.equals(['a'], ['a'])
+	  call self.assert.equals({'a':1, 'b':2}, {'a':1, 'b':2})
 	endfunction
 <
 
@@ -330,20 +331,20 @@ assert.true(actual)			*vimtest-assert-true*
 >
 	let s:testcase = vimtest#new('assert example')
 	function! s:testcase.true_success()
-	    call self.assert.true(1)
-	    call self.assert.true('1')
-	    call self.assert.true('1a')
-	    call self.assert.true(-1)
+	  call self.assert.true(1)
+	  call self.assert.true('1')
+	  call self.assert.true('1a')
+	  call self.assert.true(-1)
 	endfunction
 <
 
 テストが失敗する例を以下に示します。
 >
 	function! s:testcase.true_failure()
-	    call self.assert.true(0)
-	    call self.assert.true('a')
-	    call self.assert.true('a1')
-	    call self.assert.true([])
+	  call self.assert.true(0)
+	  call self.assert.true('a')
+	  call self.assert.true('a1')
+	  call self.assert.true([])
 	endfunction
 <
 
@@ -357,7 +358,7 @@ assert.success()				*vimtest-assert-success*
 
 assert.fail([{message}])			*vimtest-assert-fail*
 	強制的にテストを失敗させます。失敗時のメッセージを {message} で指定出
-        来ます。
+	来ます。
 
 assert.throw([{error}])				*vimtest-assert-throw*
 	このテストケースにて特定の例外が発生するかどうかを検証します。{error}
@@ -366,17 +367,17 @@ assert.throw([{error}])				*vimtest-assert-throw*
 	エラーIDとはE492のような文字列を指します。(参考:|errors|)
 >
 	function! s:testcase.expected_exception()
-	    fcall self.assert.throw('E492')
-	    " Exception:Vim:E492: エディタのコマンドではありません:     hoge
-	    hoge
+	  call self.assert.throw('E492')
+	  " Exception:Vim:E492: エディタのコマンドではありません:   hoge
+	  hoge
 	endfunction
 <
 
 	エラー文字列はthrowが発生した時点の文字列です。
 >
 	function! s:testcase.expected_exception()
-	    call self.assert.throw('sample exception')
-	    throw 'sample exception'
+	  call self.assert.throw('sample exception')
+	  throw 'sample exception'
 	endfunction
 <
 
@@ -487,7 +488,7 @@ autotest_watch_patterns
 	例えば ["~/.vim/bundle/vimtest/test/*.vim"] という値は次のように変換さ
 	れて定義されます。
 >
-	autocmd BufritePost ~/.vim/bundle/vimtest/test/*.vim VimTest filepath
+	autocmd BufwritePost ~/.vim/bundle/vimtest/test/*.vim VimTest filepath
 <
 
 	デフォルトの設定値は [] です。つまり自動でテストが再実行されることはあ
@@ -698,6 +699,42 @@ g:vimtest_vim_command
 vimtest/sampleにいくつかのサンプルがあります。参考にしてください。
 またvimtest自体のテストにvimtestが使われています。興味がある場合はvimtest/test
 以下のファイルをご覧ください。
+
+
+==============================================================================
+FAQ					*vimtest-faq*
+
+Q: 例外発生後のアサーションが実行されないのですがどうしたらいいでしょうか。
+A: テストコード側で対応していただくことになります。
+
+コード例1.
+>
+	let s:tests = vimtest#new('example')
+	function! s:tests.test()
+	  call self.assert.throw('error')
+	  try
+	    call s:func()
+	  finally
+	    call self.assert.equals('original', s:var)
+	  endtry
+	endfunction
+<
+
+コード例2.
+>
+	let s:tests = vimtest#new('example')
+	function! s:tests.test()
+	  try
+	    call s:func()
+	  catch
+	    call self.assert.equals('error', v:exception)
+	    call self.assert.equals('original', s:var)
+	  endtry
+	endfunction
+<
+
+関係するissues
+* https://github.com/kannokanno/vimtest/issues/2
 
 
 ==============================================================================
