@@ -42,7 +42,7 @@ function! vimtest#util#safety_call(funcname)
   if type(a:funcname) ==# type('')
     try
       call call(a:funcname, [])
-    catch /^Vim(\a\+):E117/
+    catch /E117.*/
       " do nothing
     endtry
   endif

@@ -1,8 +1,6 @@
 let s:testcase = vimtest#new('Smoke:モック機能') "{{{
 
 function! s:testcase.startup()
-  call vmock#clear()
-
   function! VimTestTestFunc(one)
     return 1
   endfunction
