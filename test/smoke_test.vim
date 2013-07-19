@@ -40,7 +40,11 @@ let s:testcase = vimtest#new('20:異常系 - 内部例外が発生しても正�
 
 function! s:testcase.when_exception()
   call self.assert.equals(1, 1) " passed
-  call self.assert.equals(1, a) " inner exception
-  call self.assert.equals(1, 0) " not execute
+  try
+    call self.assert.equals(1, a) " inner exception
+    call self.assert.fail()
+  catch /.*/
+    call self.assert.equals('Vim(call):E121: Undefined variable: a', v:exception)
+  endtry
 endfunction
 
