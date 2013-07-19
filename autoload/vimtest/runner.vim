@@ -21,6 +21,7 @@ function! vimtest#runner#new(name)
     " override by user
   endfunction
 
+  " TODO dirty(処理フロー、例外処理、mock処理などいろいろ含まれているから)
   function! runner._run()
     try
       call self.startup()
@@ -29,6 +30,7 @@ function! vimtest#runner#new(name)
         call self.setup()
         try " エラー時に残りのテストが止まらないようにメソッド呼び出しごとに例外処理する
           call call(self[func], [], self)
+          call vimtest#util#safety_call('vmock#verify')
         catch /.*/
           if v:exception =~# 'Vim' &&
                 \ vimtest#util#get_error_id(v:exception) ==# self.assert.current_expected_throw
@@ -40,6 +42,8 @@ function! vimtest#runner#new(name)
           else
             call self.assert.error(v:exception, v:throwpoint)
           endif
+        finally
+          call vimtest#util#safety_call('vmock#clear')
         endtry
 
         if !empty(self.assert.current_expected_throw)
@@ -55,7 +59,6 @@ function! vimtest#runner#new(name)
   endfunction
 
   function! runner._get_testcases()
-    " TODO dirty
     let ignore_pattern = join([
           \ 'type(self[v:val]) ==# type(function("tr"))',
           \ 'v:val !~# "^_"',

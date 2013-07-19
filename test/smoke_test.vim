@@ -1,4 +1,4 @@
-let s:testcase = vimtest#new('10:正常系')
+let s:testcase = vimtest#new('Smoke:正常系') "{{{
 
 function! s:testcase.test10_1()
   call self.assert.equals(1, 1)
@@ -9,8 +9,8 @@ function! s:testcase.test10_2()
   call self.assert.equals(1, 1)
   call self.assert.equals(2, 2)
 endfunction
-
-let s:testcase = vimtest#new('11:正常系 - setupなどのフックを利用')
+"}}}
+let s:testcase = vimtest#new('Smoke:正常系 - setupなどのフックを利用') "{{{
 
 function! s:testcase.startup()
   echo 'startup'
@@ -35,8 +35,8 @@ endfunction
 function! s:testcase.two()
   call self.assert.not_equals('invalid value', self.custom.value)
 endfunction 
-
-let s:testcase = vimtest#new('20:異常系 - 内部例外が発生しても正常に失敗メッセージが生成される')
+"}}}
+let s:testcase = vimtest#new('Smoke:異常系 - 内部例外が発生しても正常に失敗メッセージが生成される') "{{{
 
 function! s:testcase.when_exception()
   call self.assert.equals(1, 1) " passed
@@ -47,4 +47,4 @@ function! s:testcase.when_exception()
     call self.assert.equals('Vim(call):E121: Undefined variable: a', v:exception)
   endtry
 endfunction
-
+"}}}
