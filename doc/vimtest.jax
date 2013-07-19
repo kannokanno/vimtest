@@ -14,13 +14,14 @@ Author: kanno <akapanna@gmail.com>
 アサーション					|vimtest-assert|
 カスタムプロパティ				|vimtest-custom|
 命名規則					|vimtest-name-rule|
+モック						|vimtest-mock|
 設定						|vimtest-settings|
 設定例						|vimtest-settings-example|
 コマンド					|vimtest-command|
 コマンドライン実行				|vimtest-command-line|
 コマンドライン実行の設定			|vimtest-command-line-settings|
 サンプル					|vimtest-example|
-FAQ					|vimtest-faq|
+FAQ						|vimtest-faq|
 更新履歴					|vimtest-changelog|
 
 
@@ -460,6 +461,29 @@ xUnitテストフレームにおける、テストクラス内での変数やヘ
 
 
 ==============================================================================
+モック						*vimtest-mock*
+
+[kannokanno/vmock](https://github.com/kannokanno/vmock) がインストールされてい
+るとvmockの機能が使えます。
+以下にコード例を示します。
+>
+	let s:testcase = vimtest#new()
+	function! s:testcase.test()
+	  " original return value
+	  call self.assert.equals(1, SomeFunc('arg'))
+	  " mock setting
+	  call vmock#mock('SomeFunc').with('arg').return(100).once()
+	  " mock return value
+	  call self.assert.equals(100, g:vimtest_test_func_one_args('arg'))
+	endfunction
+<
+テストケース毎の終了時に、モックの引数検証と呼び出し回数の検証を行います。もし
+期待値と一致しない場合はテストが失敗します。
+
+モックの機能に関する詳細はvmockのヘルプを参照してください。
+
+
+==============================================================================
 設定						*vimtest-settings*
 						*g:vimtest_config*
 
@@ -571,7 +595,9 @@ autotest_cmd
 >
 	let g:vimtest_config = {
 	      \ 'outputter': 'quickfix',
-	      \ 'autotest_watch_patterns': ['~/.vim/bundle/vimtest/test/*.vim', '~/.vim/bundle/vimtest/autoload/vimtest/*.vim'],
+	      \ 'autotest_watch_patterns':
+	      \    ['~/.vim/bundle/vimtest/test/*.vim',
+	      \    '~/.vim/bundle/vimtest/autoload/vimtest/*.vim'],
 	      \ 'autotest_testpath': '~/.vim/bundle/vimtest/test/autoload',
 	      \ }
 <
@@ -702,7 +728,7 @@ vimtest/sampleにいくつかのサンプルがあります。参考にしてく
 
 
 ==============================================================================
-FAQ					*vimtest-faq*
+FAQ						*vimtest-faq*
 
 Q: 例外発生後のアサーションが実行されないのですがどうしたらいいでしょうか。
 A: テストコード側で対応していただくことになります。
@@ -739,6 +765,10 @@ A: テストコード側で対応していただくことになります。
 
 ==============================================================================
 更新履歴					*vimtest-changelog*
+
+0.0.6	2013-07-19
+	- モック機能(vmock)を追加
+	- いくつかのバグを修正
 
 0.0.5	2013-04-06
 	- vimtest_configにauto_source追加
