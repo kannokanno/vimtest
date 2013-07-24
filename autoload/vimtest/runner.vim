@@ -32,7 +32,7 @@ function! vimtest#runner#new(name)
           call call(self[func], [], self)
           call vimtest#util#safety_call('vmock#verify')
         catch /.*/
-          if v:exception =~# 'Vim' &&
+          if v:exception =~# 'Vim:' &&
                 \ vimtest#util#get_error_id(v:exception) ==# self.assert.current_expected_throw
             call self.assert.success()
             let self.assert.current_expected_throw = ''
