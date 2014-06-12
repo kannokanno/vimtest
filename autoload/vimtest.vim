@@ -66,7 +66,9 @@ endfunction
 
 function! s:parse_args(path, type)
   let info = {}
-  let info.testfile = empty(a:path) ? expand('%') : a:path
+  " 絶対パスでないと、現在のカレントワーキングディレクトリ次第で自動sourceされない可能性がある。
+  " (例: testディレクトリがカレントワーキングディレクトリの場合)
+  let info.testfile = empty(a:path) ? expand('%:p') : fnamemodify(a:path, ':p')
   let info.outputter = vimtest#outputter#get(a:type)
   return info
 endfunction
