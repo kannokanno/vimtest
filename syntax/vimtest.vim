@@ -13,7 +13,7 @@ set cpo&vim
 
 " colors
 execute 'highlight default VimTestSuccess ctermfg=Green guifg=Green'
-execute 'highlight default VimTestFailure ctermfg=DarkRed guifg=DarkRed'
+execute 'highlight default link VimTestFailure Error'
 
 " each test status
 " TODO パターン内の指定範囲のみハイライト適用ってどう書けばいいの？
