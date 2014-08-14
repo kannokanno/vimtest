@@ -1,0 +1,4 @@
+script: ./bin/vimtest test
+notifications:
+  email: false
+
