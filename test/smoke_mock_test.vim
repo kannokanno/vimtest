@@ -1,4 +1,12 @@
-let s:testcase = vimtest#new('Smoke:モック機能') "{{{
+" vmockが入っている場合のみテストする "{{{
+function! DummyForVMock()
+endfunction
+try
+  call vmock#mock('DummyForVMock')
+  let s:testcase = vimtest#new('Smoke:モック機能')
+catch /E117.*/
+  let s:testcase = {}
+endtry
 
 function! s:testcase.startup()
   function! VimTestTestFunc(one)
