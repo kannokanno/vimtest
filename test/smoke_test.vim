@@ -38,6 +38,15 @@ endfunction
 "}}}
 let s:testcase = vimtest#new('Smoke:異常系 - 内部例外が発生しても正常に失敗メッセージが生成される') "{{{
 
+function! s:testcase.startup()
+	let self.original_lang = v:lang
+	silent language C
+endfunction
+
+function! s:testcase.shutdown()
+	silent execute 'language' self.original_lang
+endfunction
+
 function! s:testcase.when_exception()
   call self.assert.equals(1, 1) " passed
   try
