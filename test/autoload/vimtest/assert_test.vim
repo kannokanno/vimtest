@@ -112,3 +112,13 @@ function! s:testcase.expected_throw()
   " 上で例外指定しているので通る
   call remove(self.assert, 'exception')
 endfunction
+
+function! s:testcase.expected_throw_match()
+  call self.assert.false(has_key(self.assert, 'exception'))
+
+  call self.assert.throw_match('^foo')
+  call self.assert.true(has_key(self.assert, 'exception'))
+  throw 'foobar'
+  " 上で例外指定しているので通る
+  call remove(self.assert, 'exception')
+endfunction

@@ -85,6 +85,10 @@ function! vimtest#assert#new(name)
           \ : vimtest#assert#exception#new(a:error, 0)
   endfunction
 
+  function! assert.throw_match(regexp)
+    let self.exception = vimtest#assert#exception#new(a:regexp, 1)
+  endfunction
+
   " shortcut
   function! assert.success()
     call self.result.success()
