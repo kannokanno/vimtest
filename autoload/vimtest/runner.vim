@@ -32,12 +32,10 @@ function! vimtest#runner#new(name)
           call call(self[func], [], self)
           call vimtest#util#safety_call('vmock#verify')
         catch /.*/
-          if vimtest#util#get_error_id(v:exception) ==# self.assert.current_expected_throw
+          if has_key(self.assert, 'exception') &&
+                \ self.assert.exception.test(v:exception)
             call self.assert.success()
-            let self.assert.current_expected_throw = ''
-          elseif v:exception ==# self.assert.current_expected_throw
-            call self.assert.success()
-            let self.assert.current_expected_throw = ''
+            call remove(self.assert, 'exception')
           else
             call self.assert.error(v:exception, v:throwpoint)
           endif
@@ -45,9 +43,13 @@ function! vimtest#runner#new(name)
           call vimtest#util#safety_call('vmock#clear')
         endtry
 
-        if !empty(self.assert.current_expected_throw)
-          call self.assert.fail(vimtest#message#not_occur(self.assert.current_expected_throw))
-          let self.assert.current_expected_throw = ''
+        if has_key(self.assert, 'exception')
+          let exception = self.assert.exception.expected
+          if self.assert.exception.is_regexp
+            let exception = '/' . escape(exception, '/') . '/'
+          endif
+          call self.assert.fail(vimtest#message#not_occur(exception))
+          call remove(self.assert, 'exception')
         endif
         call self.teardown()
       endfor

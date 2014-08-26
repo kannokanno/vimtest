@@ -95,17 +95,20 @@ function! s:testcase.false_expected_false()
 endfunction
 
 function! s:testcase.expected_throw_value()
-  call self._simple_assert('', self.assert.current_expected_throw)
+  call self.assert.false(has_key(self.assert, 'exception'))
+
   call self.assert.throw('hogehoge')
-  call self._simple_assert('hogehoge', self.assert.current_expected_throw)
+  call self.assert.true(has_key(self.assert, 'exception'))
+  call self.assert.true(self.assert.exception.test('hogehoge'))
   " 値が残っていると実際に「例外が発生したかどうか」のテストが走ってしまうので消す
-  call self.assert.throw('')
+  call remove(self.assert, 'exception')
 endfunction
 
 function! s:testcase.expected_throw()
-  call self._simple_assert('', self.assert.current_expected_throw)
+  call self.assert.false(has_key(self.assert, 'exception'))
+
   call self.assert.throw('E684')
   let a = remove([], -1)
   " 上で例外指定しているので通る
-  call self.assert.throw('')
+  call remove(self.assert, 'exception')
 endfunction
