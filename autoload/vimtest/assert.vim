@@ -7,7 +7,6 @@ set cpo&vim
 function! vimtest#assert#new(name)
   let assert = {
         \ 'result' : vimtest#result#new(a:name),
-        \ 'current_expected_throw' : '',
         \ }
 
   function! assert.set_current_testcase(func_name)
@@ -81,7 +80,13 @@ function! vimtest#assert#new(name)
   endfunction
 
   function! assert.throw(error)
-    let self.current_expected_throw = a:error
+    let self.exception = (a:error =~# '\v^E\d+$')
+          \ ? vimtest#assert#exception#new_for_vim_error(a:error)
+          \ : vimtest#assert#exception#new(a:error, 0)
+  endfunction
+
+  function! assert.throw_match(regexp)
+    let self.exception = vimtest#assert#exception#new(a:regexp, 1)
   endfunction
 
   " shortcut

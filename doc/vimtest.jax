@@ -382,6 +382,17 @@ assert.throw([{error}])				*vimtest-assert-throw*
 	endfunction
 <
 
+assert.throw_match({regexp})			*vimtest-assert-throw_match*
+	このテストケースにて指定した正規表現にマッチする例外が発生するかどう
+	かを検証します。{regexp}にマッチする例外が発生しなかった場合にテストが
+	失敗します。
+>
+	" 'foobar'は正規表現'^foo'にマッチするので、このテストは成功する。
+	function! s:testcase.throw_match_example()
+	  call self.assert.throw_match('^foo')
+	  throw 'foobar'
+	endfunction
+<
 
 ==============================================================================
 カスタムプロパティ				*vimtest-custom*

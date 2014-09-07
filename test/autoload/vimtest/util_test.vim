@@ -32,10 +32,3 @@ function! s:testcase.autocmd_str()
   let expected = printf('autocmd BufWritePost %s call vimtest#config#get().autotest_cmd("%s")', event, filepath)
   call self.assert.equals(expected, vimtest#util#autocmd_str(event, filepath))
 endfunction
-
-function! s:testcase.get_error_id()
-  call self.assert.equals('E492',
-        \ vimtest#util#get_error_id('Exception:Vim:E492: Not an editor command:   asdf'))
-  call self.assert.equals('E684',
-        \ vimtest#util#get_error_id('Exception:Vim(let):E684: リストのインデックスが範囲外です: -1'))
-endfunction
