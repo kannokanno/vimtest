@@ -12,3 +12,9 @@ CURRENT_DIR=`pwd`
 
 vim -i NONE -u NONE -U NONE --cmd "let g:vimtest_current_dir='$CURRENT_DIR'" --cmd "let g:vimtest_testpath='$TESTPATH'" --cmd "let g:vimtest_outfile='$OUTFILE'" -S $VIMTEST_BIN -c "qa!"
 cat $OUTFILE
+
+IS_FAILED=`grep "Failures: 0" $OUTFILE | wc -l`
+if [ $IS_FAILED -eq 0 ]; then
+  exit 1
+fi
+exit 0
