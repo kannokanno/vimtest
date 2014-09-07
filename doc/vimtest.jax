@@ -389,7 +389,7 @@ assert.throw_match({regexp})			*vimtest-assert-throw_match*
 >
 	" 'foobar'は正規表現'^foo'にマッチするので、このテストは成功する。
 	function! s:testcase.throw_match_example()
-	  call self.assert.throw('^foo')
+	  call self.assert.throw_match('^foo')
 	  throw 'foobar'
 	endfunction
 <
